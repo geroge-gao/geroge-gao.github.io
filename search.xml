@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[hive数据类型]]></title>
     <url>%2F2019%2F09%2F08%2Fhive%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%2F</url>
-    <content type="text"><![CDATA[文本文件数据编码 TSV：tab separated values；即“制表符分隔值”，用制表符分隔数据 CSV： comma separated values；即“逗号分隔值”，用逗号分隔数据 两种文件存在的缺点在于文件中可能存在不需要作为分隔符的逗号或者制表符存在，所有hive有专门的分隔符。hive记录中默认的分隔符 分隔符 描述 \n 对于文本文件来说每一行都是记录，可以使用换行符作为分隔符 ^A(ctrl+A) 用于分隔字段(列)，在CREATE TABLE 语句中可以使用八进制编码\001表示，键盘上打不出来。 ^B 用于分隔array或者struct中的元素，或于用map钟键值对的分隔，在CREATE TABLE中使用\002表示 ^C 用于MAP钟键与值的分隔，用\003表示 读时模式传统数据库是写时模式，即在写入文件的时候会，会对数据的格式进行校验，如果不符合，将无法写入数据库。 hive是读时模式，在往数据库里写入不会对数据进行校验，但是在读取数据的时候会对数据进行校验，对于不合格的数据，会设置为null。 hive的优点在于加载(写)数据的时候速度较快，因为不需要对数据进行解析，而传统写时模式则有利于数据的查询。 好久没有更新博客了，这篇虽然水了点，写得像个笔记，算是开篇吧，封面送上爱丽丝吧！]]></content>
+    <content type="text"><![CDATA[文本文件数据编码 TSV：tab separated values；即“制表符分隔值”，用制表符分隔数据 CSV： comma separated values；即“逗号分隔值”，用逗号分隔数据 两种文件存在的缺点在于文件中可能存在不需要作为分隔符的逗号或者制表符存在，所有hive有专门的分隔符。hive记录中默认的分隔符 分隔符 描述 \n 对于文本文件来说每一行都是记录，可以使用换行符作为分隔符 ^A(ctrl+A) 用于分隔字段(列)，在CREATE TABLE 语句中可以使用八进制编码\001表示，键盘上打不出来。 ^B 用于分隔array或者struct中的元素，或于用map钟键值对的分隔，在CREATE TABLE中使用\002表示 ^C 用于MAP钟键与值的分隔，用\003表示 读时模式传统数据库是写时模式，即在写入文件的时候会，会对数据的格式进行校验，如果不符合，将无法写入数据库。 hive是读时模式，在往数据库里写入不会对数据进行校验，但是在读取数据的时候会对数据进行校验，对于不合格的数据，会设置为null。 hive的优点在于加载(写)数据的时候速度较快，因为不需要对数据进行解析，而传统写时模式则有利于数据的查询。 好久没有更新博客了，这篇虽然水了点，写得像个笔记，算是开篇吧，福利就上亚丝娜吧!!!]]></content>
       <categories>
         <category>大数据</category>
         <category>hive编程</category>
@@ -12,22 +12,5 @@
         <tag>Hive</tag>
         <tag>编码类型</tag>
       </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[测试]]></title>
-    <url>%2F2019%2F09%2F04%2F%E6%B5%8B%E8%AF%95%2F</url>
-    <content type="text"><![CDATA[这仅仅是一个测试，不要在意just for fun这里是latex公式测试 \frac{1}{3}+x^2=4y这里是代码测试123456789#include&lt;iostream&gt;using namespace std;int main()&#123; cout&lt;&lt;"hello world"&lt;&lt;endl; return 0 ;&#125; 现在开始设置一些不一样的东西 just testing 大啦是假的快啦睡觉都快了3 f(x)=3y+7z现在开始创建一些东西 这里是图片测试]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>编程总结</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Hello World]]></title>
-    <url>%2F2019%2F09%2F01%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
   </entry>
 </search>
