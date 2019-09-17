@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-09-08T16:04:42.101Z</updated>
+  <updated>2019-09-17T14:00:35.825Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hive的基本操作</title>
+    <link href="http://yoursite.com/2019/09/17/hive%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/"/>
+    <id>http://yoursite.com/2019/09/17/hive的基本操作/</id>
+    <published>2019-09-17T13:57:11.000Z</published>
+    <updated>2019-09-17T14:00:35.825Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="先打个标签"><a href="#先打个标签" class="headerlink" title="先打个标签"></a>先打个标签</h2>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;先打个标签&quot;&gt;&lt;a href=&quot;#先打个标签&quot; class=&quot;headerlink&quot; title=&quot;先打个标签&quot;&gt;&lt;/a&gt;先打个标签&lt;/h2&gt;
+      
+    
+    </summary>
+    
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hive编程" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/hive%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+      <category term="基本操作" scheme="http://yoursite.com/tags/%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>hive数据类型</title>
