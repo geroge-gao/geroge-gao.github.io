@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="心如止水" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":2,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1234%matplotlib inlineimport numpy as npimport pandas as pdimport matplotlib.pyplot as plt1234# 加载数据data_01 = pd.read_csv(&apos;data/data_01.csv&apos;)data_02 = pd.read_csv(&apos;data/data_02.csv&apos;)data_03 = pd.read_">
+<meta name="keywords" content="人工智能、大数据、机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="心如止水">
+<meta property="og:url" content="http://yoursite.com/2019/09/24/pandas实践/index.html">
+<meta property="og:site_name" content="心如止水">
+<meta property="og:description" content="1234%matplotlib inlineimport numpy as npimport pandas as pdimport matplotlib.pyplot as plt1234# 加载数据data_01 = pd.read_csv(&apos;data/data_01.csv&apos;)data_02 = pd.read_csv(&apos;data/data_02.csv&apos;)data_03 = pd.read_">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-23T16:17:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="心如止水">
+<meta name="twitter:description" content="1234%matplotlib inlineimport numpy as npimport pandas as pdimport matplotlib.pyplot as plt1234# 加载数据data_01 = pd.read_csv(&apos;data/data_01.csv&apos;)data_02 = pd.read_csv(&apos;data/data_02.csv&apos;)data_03 = pd.read_">
+  <link rel="canonical" href="http://yoursite.com/2019/09/24/pandas实践/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | 心如止水</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">心如止水</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/24/pandas实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-24 00:18:25 / 修改时间：00:17:29" itemprop="dateCreated datePublished" datetime="2019-09-24T00:18:25+08:00">2019-09-24</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载数据</span></span><br><span class="line">data_01 = pd.read_csv(<span class="string">'data/data_01.csv'</span>)</span><br><span class="line">data_02 = pd.read_csv(<span class="string">'data/data_02.csv'</span>)</span><br><span class="line">data_03 = pd.read_csv(<span class="string">'data/data_03.csv'</span>)</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+<h2 id="将三个数据合并"><a href="#将三个数据合并" class="headerlink" title="将三个数据合并"></a>将三个数据合并</h2><pre><code>concat(objs, axis,join)
+</code></pre><p>objs: series，dataframe或者pannel构成的list序列</p>
+<p>axis: 需要合并链接的轴，0表示的是行，1表示的是列,默认为0</p>
+<p>join: 表示连接方式，inner或者outer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">data = pd.concat([data_01, data_02, data_03])</span><br><span class="line">data.head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cand_nm</th>
+      <th>contbr_nm</th>
+      <th>contbr_st</th>
+      <th>contbr_employer</th>
+      <th>contbr_occupation</th>
+      <th>contb_receipt_amt</th>
+      <th>contb_receipt_dt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bachmann, Michelle</td>
+      <td>HARVEY, WILLIAM</td>
+      <td>AL</td>
+      <td>RETIRED</td>
+      <td>RETIRED</td>
+      <td>250.0</td>
+      <td>20-Jun-11</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Bachmann, Michelle</td>
+      <td>HARVEY, WILLIAM</td>
+      <td>AL</td>
+      <td>RETIRED</td>
+      <td>RETIRED</td>
+      <td>50.0</td>
+      <td>23-Jun-11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Bachmann, Michelle</td>
+      <td>SMITH, LANIER</td>
+      <td>AL</td>
+      <td>INFORMATION REQUESTED</td>
+      <td>INFORMATION REQUESTED</td>
+      <td>250.0</td>
+      <td>5-Jul-11</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Bachmann, Michelle</td>
+      <td>BLEVINS, DARONDA</td>
+      <td>AR</td>
+      <td>NONE</td>
+      <td>RETIRED</td>
+      <td>250.0</td>
+      <td>1-Aug-11</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Bachmann, Michelle</td>
+      <td>WARDENBURG, HAROLD</td>
+      <td>AR</td>
+      <td>NONE</td>
+      <td>RETIRED</td>
+      <td>300.0</td>
+      <td>20-Jun-11</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.info()</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Int64Index: 1001732 entries, 0 to 1730
+Data columns (total 7 columns):
+cand_nm              1001732 non-null object
+contbr_nm            1001732 non-null object
+contbr_st            1001728 non-null object
+contbr_employer      988003 non-null object
+contbr_occupation    993302 non-null object
+contb_receipt_amt    1001732 non-null float64
+contb_receipt_dt     1001732 non-null object
+dtypes: float64(1), object(6)
+memory usage: 61.1+ MB
+</code></pre><h2 id="各字段含义"><a href="#各字段含义" class="headerlink" title="各字段含义"></a>各字段含义</h2><ul>
+<li>cand_nm — 接受捐赠的候选人姓名</li>
+<li>contbr_nm — 捐赠人姓名</li>
+<li>contbr_st — 捐赠人所在州</li>
+<li>contbr_employer — 捐赠人所在公司</li>
+<li>contbr_occupation — 捐赠人职业</li>
+<li>contb_receipt_amt — 捐赠数额（美元）</li>
+<li>contb_receipt_dt — 收到捐款的日期</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.describe()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>contb_receipt_amt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1.001732e+06</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>2.982358e+02</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>3.749665e+03</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-3.080000e+04</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>3.500000e+01</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.000000e+02</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2.500000e+02</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.014491e+06</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h1 id="2-数据清洗"><a href="#2-数据清洗" class="headerlink" title="2.数据清洗"></a>2.数据清洗</h1><h2 id="2-1缺失值处理"><a href="#2-1缺失值处理" class="headerlink" title="2.1缺失值处理"></a>2.1缺失值处理</h2><p>dataframe.fillna()函数，对缺失值进行处理共有5个参数，功能是用指定的方法填充NA/NaN</p>
+<ul>
+<li>value: 变量，字典，Series or Dataframe</li>
+<li>method: {‘backfill’,’bfill’,’pad’,’ffill’,None}，默认值为None，pad/ffill表示用前一个非缺失值去填充缺失值<br>backfill/bfill表示用下一个非缺失值填充该缺失值，None指定一个值去代替缺失值</li>
+<li>inplace: True or False，True表示在原始数据上修改，False表示创建一个副本在副本上修改</li>
+<li>limit: int，表示连续填充最大值，默认为None</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将两个字段用NOT PROVIDED填充</span></span><br><span class="line">data[<span class="string">'contbr_employer'</span>].fillna(<span class="string">'NOT PROVIDED'</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">data[<span class="string">'contbr_occupation'</span>].fillna(<span class="string">'NOT PROVIDED'</span>, inplace=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'一共有&#123;&#125;位候选人'</span>.format(len(data[<span class="string">'cand_nm'</span>].unique())))</span><br></pre></td></tr></table></figure>
+<pre><code>一共有13位候选人
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 类似SQL中的distinct操作</span></span><br><span class="line">data[<span class="string">'cand_nm'</span>].unique()</span><br></pre></td></tr></table></figure>
+<pre><code>array([&#39;Bachmann, Michelle&#39;, &#39;Romney, Mitt&#39;, &#39;Obama, Barack&#39;,
+       &quot;Roemer, Charles E. &#39;Buddy&#39; III&quot;, &#39;Pawlenty, Timothy&#39;,
+       &#39;Johnson, Gary Earl&#39;, &#39;Paul, Ron&#39;, &#39;Santorum, Rick&#39;,
+       &#39;Cain, Herman&#39;, &#39;Gingrich, Newt&#39;, &#39;McCotter, Thaddeus G&#39;,
+       &#39;Huntsman, Jon&#39;, &#39;Perry, Rick&#39;], dtype=object)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">parties = &#123;<span class="string">'Bachmann, Michelle'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Cain, Herman'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Gingrich, Newt'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Huntsman, Jon'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Johnson, Gary Earl'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'McCotter, Thaddeus G'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Obama, Barack'</span>: <span class="string">'Democrat'</span>,</span><br><span class="line">           <span class="string">'Paul, Ron'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Pawlenty, Timothy'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Perry, Rick'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">"Roemer, Charles E. 'Buddy' III"</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Romney, Mitt'</span>: <span class="string">'Republican'</span>,</span><br><span class="line">           <span class="string">'Santorum, Rick'</span>: <span class="string">'Republican'</span>&#125;</span><br><span class="line">data[<span class="string">'party'</span>] = data[<span class="string">'cand_nm'</span>].map(parties)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data[<span class="string">'party'</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<pre><code>Democrat      593747
+Republican    407985
+Name: party, dtype: int64
+</code></pre><h2 id="排序，按照职业汇总对赞助金额进行排序"><a href="#排序，按照职业汇总对赞助金额进行排序" class="headerlink" title="排序，按照职业汇总对赞助金额进行排序"></a>排序，按照职业汇总对赞助金额进行排序</h2><p>按照各个职位进行汇总，计算赞助总金额展示前20项，发现不少职业是相同的，只不过表达方式不一样，如C.E.O和CEO</p>
+<pre><code>DataFrame.sort_value(by,ascengding=True,inplace=False)
+</code></pre><ul>
+<li>by表示根据那一项排序，可以传入多列值</li>
+<li>ascending=True表示升序，False表示降序，inplace=True表示修复原dataframe，默认为False</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.groupby(<span class="string">'contbr_occupation'</span>)[<span class="string">'contb_receipt_amt'</span>].sum().sort_values(ascending=<span class="literal">False</span>)[:<span class="number">20</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>contbr_occupation
+RETIRED                                   48176397.00
+ATTORNEY                                  18470473.30
+HOMEMAKER                                 17484807.65
+INFORMATION REQUESTED PER BEST EFFORTS    15859514.55
+INFORMATION REQUESTED                      8742357.59
+PHYSICIAN                                  7224044.40
+PRESIDENT                                  6347843.59
+EXECUTIVE                                  5273717.90
+CONSULTANT                                 4932627.98
+NOT PROVIDED                               4224760.39
+CEO                                        3570942.20
+LAWYER                                     3537982.19
+OWNER                                      3278488.16
+INVESTOR                                   3204481.92
+ENGINEER                                   2730527.43
+PROFESSOR                                  2458033.81
+C.E.O.                                     2433218.11
+SELF-EMPLOYED                              2259150.94
+MANAGER                                    2167571.47
+REAL ESTATE                                2110499.34
+Name: contb_receipt_amt, dtype: float64
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/17/hive的基本操作/" rel="next" title="hive的基本操作">
+                  <i class="fa fa-chevron-left"></i> hive的基本操作
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#将三个数据合并"><span class="nav-number">1.</span> <span class="nav-text">将三个数据合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各字段含义"><span class="nav-number">2.</span> <span class="nav-text">各字段含义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-数据清洗"><span class="nav-number"></span> <span class="nav-text">2.数据清洗</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1缺失值处理"><span class="nav-number">1.</span> <span class="nav-text">2.1缺失值处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序，按照职业汇总对赞助金额进行排序"><span class="nav-number">2.</span> <span class="nav-text">排序，按照职业汇总对赞助金额进行排序</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avator.png"
+      alt="gerogegao">
+  <p class="site-author-name" itemprop="name">gerogegao</p>
+  <div class="site-description" itemprop="description">世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/geroge-gao" title="GitHub &rarr; https://github.com/geroge-gao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/gzj_1101@163.com" title="E-Mail &rarr; gzj_1101@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/xiao-gao-2/activities" title="知乎 &rarr; https://www.zhihu.com/people/xiao-gao-2/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by gerogegao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
