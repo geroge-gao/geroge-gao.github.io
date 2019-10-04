@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[test]]></title>
     <url>%2F2019%2F10%2F05%2Ftest%2F</url>
-    <content type="text"><![CDATA[S_w=S_1+S_2$S_1+S_2=Abc$哈哈哈哈]]></content>
+    <content type="text"><![CDATA[S_w=S_1+S_2$S_1+S_2=Abc$]]></content>
   </entry>
   <entry>
     <title><![CDATA[Matplotlib的基本用法]]></title>
@@ -56,8 +56,8 @@
       </categories>
       <tags>
         <tag>机器学习</tag>
-        <tag>数据降维</tag>
         <tag>特征工程</tag>
+        <tag>数据降维</tag>
       </tags>
   </entry>
   <entry>

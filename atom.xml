@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-10-04T16:01:24.772Z</updated>
+  <updated>2019-10-04T16:04:10.193Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,16 +21,16 @@
     <link href="http://yoursite.com/2019/10/05/test/"/>
     <id>http://yoursite.com/2019/10/05/test/</id>
     <published>2019-10-04T16:00:36.000Z</published>
-    <updated>2019-10-04T16:01:24.772Z</updated>
+    <updated>2019-10-04T16:04:10.193Z</updated>
     
-    <content type="html"><![CDATA[<script type="math/tex; mode=display">S_w=S_1+S_2</script><p>$S_1+S_2=Abc$哈哈哈哈</p>]]></content>
+    <content type="html"><![CDATA[<script type="math/tex; mode=display">S_w=S_1+S_2</script><p>$S_1+S_2=Abc$</p>]]></content>
     
     <summary type="html">
     
       
       
         &lt;script type=&quot;math/tex; mode=display&quot;&gt;
-S_w=S_1+S_2&lt;/script&gt;&lt;p&gt;$S_1+S_2=Abc$哈哈哈哈&lt;/p&gt;
+S_w=S_1+S_2&lt;/script&gt;&lt;p&gt;$S_1+S_2=Abc$&lt;/p&gt;
 
       
     
@@ -157,9 +157,9 @@ W\propto S_W^{-1}(u_1-u_2)&lt;/script&gt;&lt;p&gt;需要注意的是$S_W$在大�
     
       <category term="机器学习" scheme="http://yoursite.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="数据降维" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4/"/>
-    
       <category term="特征工程" scheme="http://yoursite.com/tags/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/"/>
+    
+      <category term="数据降维" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4/"/>
     
   </entry>
   
