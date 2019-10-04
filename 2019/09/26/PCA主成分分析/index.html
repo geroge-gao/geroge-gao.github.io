@@ -56,18 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
-<meta name="keywords" content="人工智能、大数据、机器学习">
-<meta property="og:type" content="website">
-<meta property="og:title" content="心如止水">
-<meta property="og:url" content="http://yoursite.com/archives/2019/09/index.html">
+  <meta name="description" content="S_B=(u_1-u_2)(u_1-u_2)^T S_w^{-1}(u_1-u_2)(u_1-u_2)^Tw=\lambda W因为$(u_1-u_2)^Tw$是一个标量，所以可以看出 W\propto S_W^{-1}(u_1-u_2)需要注意的是$S_W$在大多数情况下是不可逆的，所以为了解决这个问题，通常有两种方法">
+<meta name="keywords" content="机器学习,特征工程,特征降维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCA主成分分析">
+<meta property="og:url" content="http://yoursite.com/2019/09/26/PCA主成分分析/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+<meta property="og:description" content="S_B=(u_1-u_2)(u_1-u_2)^T S_w^{-1}(u_1-u_2)(u_1-u_2)^Tw=\lambda W因为$(u_1-u_2)^Tw$是一个标量，所以可以看出 W\propto S_W^{-1}(u_1-u_2)需要注意的是$S_W$在大多数情况下是不可逆的，所以为了解决这个问题，通常有两种方法">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-04T15:46:27.059Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="心如止水">
-<meta name="twitter:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
-  <link rel="canonical" href="http://yoursite.com/archives/2019/09/">
+<meta name="twitter:title" content="PCA主成分分析">
+<meta name="twitter:description" content="S_B=(u_1-u_2)(u_1-u_2)^T S_w^{-1}(u_1-u_2)(u_1-u_2)^Tw=\lambda W因为$(u_1-u_2)^Tw$是一个标量，所以可以看出 W\propto S_W^{-1}(u_1-u_2)需要注意的是$S_W$在大多数情况下是不可逆的，所以为了解决这个问题，通常有两种方法">
+  <link rel="canonical" href="http://yoursite.com/2019/09/26/PCA主成分分析/">
 
 
 <script id="page-configurations">
@@ -75,13 +76,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
-    isArchive: true
+    isArchive: false
   };
 </script>
 
-  <title>归档 | 心如止水</title>
+  <title>PCA主成分分析 | 心如止水</title>
   
 
 
@@ -220,177 +221,200 @@
         <div class="content-wrap">
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        
-        
-        
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/26/PCA主成分分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">PCA主成分分析
+
           
-        
-        <span class="collection-header">嗯..! 目前共计 6 篇日志。 继续努力。</span>
-      </div>
-      
+        </h1>
 
-      
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
 
-  
-  
+              
+                
+              
 
-  
+              <time title="创建时间：2019-09-26 22:19:48" itemprop="dateCreated datePublished" datetime="2019-09-26T22:19:48+08:00">2019-09-26</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-04 23:46:27" itemprop="dateModified" datetime="2019-10-04T23:46:27+08:00">2019-10-04</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/降维/" itemprop="url" rel="index"><span itemprop="name">降维</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <script type="math/tex; mode=display">
+S_B=(u_1-u_2)(u_1-u_2)^T</script><script type="math/tex; mode=display">
+S_w^{-1}(u_1-u_2)(u_1-u_2)^Tw=\lambda W</script><p>因为$(u_1-u_2)^Tw$是一个标量，所以可以看出</p><script type="math/tex; mode=display">
+W\propto S_W^{-1}(u_1-u_2)</script><p>需要注意的是$S_W$在大多数情况下是不可逆的，所以为了解决这个问题，通常有两种方法</p><a id="more"></a>
+
+<ul>
+<li>令$S_W=S_W+\gamma I$，其中$I$是一个特别小的数，这样$S_W$一定可逆</li>
+<li>先使用PCA对数据局进行降维，使得降维后的数据的$S_W$一定可逆</li>
+</ul>
+<script type="math/tex; mode=display">
+S_w=\sum_{i=1}^C S_{wi}</script><script type="math/tex; mode=display">
+S_{wi}=\sum_{x\in{y_i}}(x-\mu_i)(x-\mu_i)^T</script><script type="math/tex; mode=display">
+S_B=\sum_{i=1}^C\frac{N_i}{N}(\mu_i-\mu)(\mu_i-\mu)^T</script><p>其中$\mu$表示所有的特征值得均值</p>
+<script type="math/tex; mode=display">
+\mu=\frac{1}{N}\sum_{\forall x\in y_i}x</script><p>而$\mu_i$求的是每一个分类的均值，在而分类中$S_B$表示的是类间的差值，但是在多分类中肯定无法这样计算，所以分类中计算的是每个分类中心点到所以分类中心点的方差。C表示的是分类数。</p>
+<p>最后得到的结果和原来还是一样</p>
+<script type="math/tex; mode=display">
+S_w^{-1}S_Bw_i=\lambda w_i</script><p>所以总结下来LDA的计算流程为</p>
+<ol>
+<li>计算每个分类的特征中心值$\mu$</li>
+<li>计算每个分类的类内方差$S_W$</li>
+<li>计算每个分类的类间方差$S_B$</li>
+<li>计算评价函数$J(w)=\frac{wS_Bw^t}{wS_ww^t}$</li>
+<li>利用拉格朗日得到最后的结果</li>
+</ol>
+<p>LDA用于降维，和PCA有很多相同，也有很多不同的地方，因此值得好好的比较一下两者的降维异同点。</p>
+<p>　　　　首先我们看看相同点：</p>
+<p>　　　　1）两者均可以对数据进行降维。</p>
+<p>　　　　2）两者在降维时均使用了矩阵特征分解的思想。</p>
+<p>　　　　3）两者都假设数据符合高斯分布。</p>
+<p>　　　　我们接着看看不同点：</p>
+<p>　　　　1）LDA是有监督的降维方法，而PCA是无监督的降维方法</p>
+<p>　　　　2）LDA降维最多降到类别数k-1的维数，而PCA没有这个限制。，所以</p>
+<p>　　　　3）LDA除了可以用于降维，还可以用于分类。</p>
+<p>　　　　4）LDA选择分类性能最好的投影方向，而PCA选择样本点投影具有最大方差的方向。</p>
+<p>　　　　这点可以从下图形象的看出，在某些数据分布下LDA比PCA降维较优。</p>
+<p>感觉使用latex写公式真的爽的一笔啊</p>
+<script type="math/tex; mode=display">
+f(x)=\frac{1}{x}+3y+7z</script>
     </div>
-  
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
+    
+    
+    
         
-          <a class="post-title-link" href="/2019/09/26/PCA主成分分析/" itemprop="url">
-            <span itemprop="name">PCA主成分分析</span>
-          </a>
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
         
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-26T22:19:48+08:00"
-              content="2019-09-26">
-          09-26
-        </time>
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
       </div>
 
-    </header>
-  </article>
+  </div>
+</div>
 
+      
 
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+            
+              <a href="/tags/特征工程/" rel="tag"># 特征工程</a>
+            
+              <a href="/tags/特征降维/" rel="tag"># 特征降维</a>
+            
+          </div>
         
-          <a class="post-title-link" href="/2019/09/21/特征工程-一/" itemprop="url">
-            <span itemprop="name">特征工程(一)</span>
-          </a>
+
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-21T11:29:58+08:00"
-              content="2019-09-21">
-          09-21
-        </time>
-      </div>
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/21/特征工程-一/" rel="next" title="特征工程(一)">
+                  <i class="fa fa-chevron-left"></i> 特征工程(一)
+                </a>
+              
+            </div>
 
-    </header>
-  </article>
+            <span class="post-nav-divider"></span>
 
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/04/Matplotlib的Seaborn风格可视化/" rel="prev" title="Matplotlib的Seaborn风格可视化">
+                  Matplotlib的Seaborn风格可视化 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
         
-          <a class="post-title-link" href="/2019/09/17/hive的基本操作/" itemprop="url">
-            <span itemprop="name">hive的基本操作</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-17T21:57:11+08:00"
-              content="2019-09-17">
-          09-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/08/hive数据类型/" itemprop="url">
-            <span itemprop="name">hive数据类型</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-08T16:40:03+08:00"
-              content="2019-09-08">
-          09-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-
-    </div>
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
@@ -409,6 +433,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
