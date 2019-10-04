@@ -75,8 +75,8 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_16_1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_18_0.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_0.png">
-<meta property="og:image" content="f:/MyBlog/source/_posts/season风格可视化/output_20_1.png">
-<meta property="og:image" content="f:/MyBlog/source/_posts/season风格可视化/output_20_2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_22_1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_23_0.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_26_1.png">
@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_81_1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_82_1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_84_2.png">
-<meta property="og:updated_time" content="2019-10-04T11:20:14.901Z">
+<meta property="og:updated_time" content="2019-10-04T11:23:26.649Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matplotlib的Seaborn风格可视化">
 <meta name="twitter:description" content="1.Seaborn风格可视化1.1 什么事seaborn​       Seaborn是基于matplotlib的图形可视化python包。它提供了一种高度交互式界面，便于用户能够做出各种有吸引力的统计图表。Seaborn是在matplotlib的基础上进行了更高级的API封装，从而使得作图更加容易，在大多数情况下使用seaborn能做出很具有吸引力的图，而使用matplotlib就能制作具有更多">
@@ -318,7 +318,7 @@
                 
               
 
-              <time title="创建时间：2019-10-04 19:04:57 / 修改时间：19:20:14" itemprop="dateCreated datePublished" datetime="2019-10-04T19:04:57+08:00">2019-10-04</time>
+              <time title="创建时间：2019-10-04 19:04:57 / 修改时间：19:23:26" itemprop="dateCreated datePublished" datetime="2019-10-04T19:04:57+08:00">2019-10-04</time>
             </span>
           
             
@@ -388,8 +388,8 @@
 <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_18_0.png" alt="png"></p>
 <h2 id="2-9-设置颜色线性变化"><a href="#2-9-设置颜色线性变化" class="headerlink" title="2.9 设置颜色线性变化"></a>2.9 设置颜色线性变化</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置颜色线性变化</span></span><br><span class="line">sns.palplot(sns.cubehelix_palette(<span class="number">16</span>, gamma=<span class="number">2</span>))</span><br><span class="line">sns.palplot(sns.cubehelix_palette(<span class="number">16</span>, start=<span class="number">.5</span>, rot=<span class="number">.75</span>))</span><br><span class="line">sns.palplot(sns.cubehelix_palette(<span class="number">16</span>,start=<span class="number">0.5</span>, rot=<span class="number">0</span>, dark=<span class="number">0.95</span>, reverse=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># n_colors → 颜色个数</span></span><br><span class="line"><span class="comment"># start → 值区间在0-3，开始颜色</span></span><br><span class="line"><span class="comment"># rot → 颜色旋转角度</span></span><br><span class="line"><span class="comment"># gamma → 颜色伽马值，越大颜色越暗</span></span><br><span class="line"><span class="comment"># dark，light → 值区间0-1，颜色深浅</span></span><br><span class="line"><span class="comment"># reverse → 布尔值，默认为False，由浅到深</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_0.png" alt="png"></p>
-<p><img src="F:/MyBlog/source/_posts/season风格可视化/output_20_1.png" alt="png"></p>
-<p><img src="F:/MyBlog/source/_posts/season风格可视化/output_20_2.png" alt="png"></p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_1.png" alt="png"></p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_20_2.png" alt="png"></p>
 <h2 id="2-10-创建分散颜色"><a href="#2-10-创建分散颜色" class="headerlink" title="2.10 创建分散颜色"></a>2.10 创建分散颜色</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize = (<span class="number">8</span>,<span class="number">6</span>))</span><br><span class="line">x = np.arange(<span class="number">25</span>).reshape(<span class="number">5</span>, <span class="number">5</span>)</span><br><span class="line"><span class="comment"># 创建分散颜色</span></span><br><span class="line">cmap = sns.diverging_palette(<span class="number">200</span>, <span class="number">20</span>, sep=<span class="number">20</span>, as_cmap=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">sns.heatmap(x, cmap=cmap)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;matplotlib.axes._subplots.AxesSubplot at 0x1b21a370cf8&gt;</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_22_1.png" alt="png"></p>
@@ -619,7 +619,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   Unnamed: 0  subject attention  solutions  score</span><br><span class="line">0           0        1   divided          1    2.0</span><br><span class="line">1           1        2   divided          1    3.0</span><br><span class="line">2           2        3   divided          1    3.0</span><br><span class="line">3           3        4   divided          1    5.0</span><br><span class="line">4           4        5   divided          1    4.0</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;seaborn.axisgrid.FacetGrid at 0x1b22328cb00&gt;</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Seaborn%E9%A3%8E%E6%A0%BC%E5%8F%AF%E8%A7%86%E5%8C%96/output_84_2.png" alt="png"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -663,8 +663,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/04/season风格可视化/season风格可视化/" rel="next" title="">
-                  <i class="fa fa-chevron-left"></i> 
+                <a href="/2019/09/21/特征工程-一/" rel="next" title="特征工程(一)">
+                  <i class="fa fa-chevron-left"></i> 特征工程(一)
                 </a>
               
             </div>
@@ -738,7 +738,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
