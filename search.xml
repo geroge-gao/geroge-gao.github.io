@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[test]]></title>
     <url>%2F2019%2F10%2F05%2Ftest%2F</url>
-    <content type="text"><![CDATA[S_w=S_1+S_2$S_1+S_2=Abc$]]></content>
+    <content type="text"><![CDATA[S_w=S_1+S_2]]></content>
   </entry>
   <entry>
     <title><![CDATA[Matplotlib的基本用法]]></title>
