@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[梯度提升树]]></title>
+    <url>%2F2019%2F10%2F10%2F%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91%2F</url>
+    <content type="text"><![CDATA[梯度提升树GDBT f(x)=x^2+2]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>决策树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[pandas的基本用法]]></title>
+    <url>%2F2019%2F10%2F05%2Fpandas%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>数据分析</category>
+      </categories>
+      <tags>
+        <tag>pandas</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[test]]></title>
     <url>%2F2019%2F10%2F05%2Ftest%2F</url>
     <content type="text"><![CDATA[S_w=S_1+S_2]]></content>
