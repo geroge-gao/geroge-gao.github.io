@@ -56,18 +56,18 @@
   };
 </script>
 
-  <meta name="description" content="梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。加法模型对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形">
+  <meta name="description" content="梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习集成学习bagging  boosting和stacking">
 <meta name="keywords" content="决策树,集成学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="梯度提升树">
 <meta property="og:url" content="http://yoursite.com/2019/10/10/梯度提升树/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。加法模型对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形">
+<meta property="og:description" content="梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习集成学习bagging  boosting和stacking">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-20T03:42:33.287Z">
+<meta property="og:updated_time" content="2019-10-20T08:05:06.679Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="梯度提升树">
-<meta name="twitter:description" content="梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。加法模型对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形">
+<meta name="twitter:description" content="梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习集成学习bagging  boosting和stacking">
   <link rel="canonical" href="http://yoursite.com/2019/10/10/梯度提升树/">
 
 
@@ -269,7 +269,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-20 11:42:33" itemprop="dateModified" datetime="2019-10-20T11:42:33+08:00">2019-10-20</time>
+                <time title="修改时间：2019-10-20 16:05:06" itemprop="dateModified" datetime="2019-10-20T16:05:06+08:00">2019-10-20</time>
               </span>
             
           
@@ -298,12 +298,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>   梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。</p><h2 id="加法模型"><a href="#加法模型" class="headerlink" title="加法模型"></a>加法模型</h2><p>对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如</p><a id="more"></a>
-
+        <p>   梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习</p><h2 id="集成学习"><a href="#集成学习" class="headerlink" title="集成学习"></a>集成学习</h2><h3 id="bagging-boosting和stacking"><a href="#bagging-boosting和stacking" class="headerlink" title="bagging  boosting和stacking"></a>bagging  boosting和stacking</h3><a id="more"></a>
+<h2 id="加法模型"><a href="#加法模型" class="headerlink" title="加法模型"></a>加法模型</h2><p>对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如</p>
 <script type="math/tex; mode=display">
 f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。</p>
-<p>在给定训练集的情况下以及损失函数$f(x)$的情况下</p>
-
+<h2 id="前向分布算法"><a href="#前向分布算法" class="headerlink" title="前向分布算法"></a>前向分布算法</h2><p>在给定训练集的情况下以及损失函数$L(y,f(x))$的条件下，学习加法模型$f(x)$即为最小化损失函数的问题：</p>
+<script type="math/tex; mode=display">
+\min\limits_{\beta_m,\gamma_m}\sum_{i=1}^N L(y_i,\sum_{m=1}^M\beta_mb(x_i;\gamma_m))\tag{2}</script><p>前向分步算法的思想：加法模型是不同模型的组合，因此从前向后每次学习一个基函数和基函数系数来逐步优化目标函数$(1)$,从而降低复杂度。</p>
+<p>计算流程：</p>
+<p>(1).初始化第一个基函数$f_0(x)$</p>
+<p>(2)对于m=1,2,3,…,M，极小化损失函数</p>
+<script type="math/tex; mode=display">
+(\beta_m,\gamma_m)=\arg \min\limits_{\beta,\gamma}+\beta_mb(x;\gamma_m)\tag{3}</script><p>得到参数$\beta_m,\gamma_m$</p>
+<p>(3) 更新加法模型</p>
+<script type="math/tex; mode=display">
+f_m(x)=f_{m-1}(x)+\beta_mb(x;\gamma_m)\tag{4}</script><p>(4)得到加法模型</p>
+<script type="math/tex; mode=display">
+f(x)=\sum_{i=1}^M\beta_mb(x;\gamma_m)\tag{5}</script>
     </div>
 
     
@@ -404,7 +415,7 @@ f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加法模型"><span class="nav-number">1.</span> <span class="nav-text">加法模型</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#集成学习"><span class="nav-number">1.</span> <span class="nav-text">集成学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bagging-boosting和stacking"><span class="nav-number">1.1.</span> <span class="nav-text">bagging  boosting和stacking</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加法模型"><span class="nav-number">2.</span> <span class="nav-text">加法模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前向分布算法"><span class="nav-number">3.</span> <span class="nav-text">前向分布算法</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -577,6 +588,56 @@ f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表�
 
   
 
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
   
 
   

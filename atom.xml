@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-10-20T03:42:33.287Z</updated>
+  <updated>2019-10-20T08:05:06.679Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,13 +21,13 @@
     <link href="http://yoursite.com/2019/10/10/%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91/"/>
     <id>http://yoursite.com/2019/10/10/梯度提升树/</id>
     <published>2019-10-10T15:10:38.000Z</published>
-    <updated>2019-10-20T03:42:33.287Z</updated>
+    <updated>2019-10-20T08:05:06.679Z</updated>
     
-    <content type="html"><![CDATA[<p>   梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。</p><h2 id="加法模型"><a href="#加法模型" class="headerlink" title="加法模型"></a>加法模型</h2><p>对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如</p><a id="more"></a><script type="math/tex; mode=display">f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。</p><p>在给定训练集的情况下以及损失函数$f(x)$的情况下</p>]]></content>
+    <content type="html"><![CDATA[<p>   梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习</p><h2 id="集成学习"><a href="#集成学习" class="headerlink" title="集成学习"></a>集成学习</h2><h3 id="bagging-boosting和stacking"><a href="#bagging-boosting和stacking" class="headerlink" title="bagging  boosting和stacking"></a>bagging  boosting和stacking</h3><a id="more"></a><h2 id="加法模型"><a href="#加法模型" class="headerlink" title="加法模型"></a>加法模型</h2><p>对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如</p><script type="math/tex; mode=display">f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。</p><h2 id="前向分布算法"><a href="#前向分布算法" class="headerlink" title="前向分布算法"></a>前向分布算法</h2><p>在给定训练集的情况下以及损失函数$L(y,f(x))$的条件下，学习加法模型$f(x)$即为最小化损失函数的问题：</p><script type="math/tex; mode=display">\min\limits_{\beta_m,\gamma_m}\sum_{i=1}^N L(y_i,\sum_{m=1}^M\beta_mb(x_i;\gamma_m))\tag{2}</script><p>前向分步算法的思想：加法模型是不同模型的组合，因此从前向后每次学习一个基函数和基函数系数来逐步优化目标函数$(1)$,从而降低复杂度。</p><p>计算流程：</p><p>(1).初始化第一个基函数$f_0(x)$</p><p>(2)对于m=1,2,3,…,M，极小化损失函数</p><script type="math/tex; mode=display">(\beta_m,\gamma_m)=\arg \min\limits_{\beta,\gamma}+\beta_mb(x;\gamma_m)\tag{3}</script><p>得到参数$\beta_m,\gamma_m$</p><p>(3) 更新加法模型</p><script type="math/tex; mode=display">f_m(x)=f_{m-1}(x)+\beta_mb(x;\gamma_m)\tag{4}</script><p>(4)得到加法模型</p><script type="math/tex; mode=display">f(x)=\sum_{i=1}^M\beta_mb(x;\gamma_m)\tag{5}</script>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;   梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。&lt;/p&gt;&lt;h2 id=&quot;加法模型&quot;&gt;&lt;a href=&quot;#加法模型&quot; class=&quot;headerlink&quot; title=&quot;加法模型&quot;&gt;&lt;/a&gt;加法模型&lt;/h2&gt;&lt;p&gt;对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如&lt;/p&gt;
+      &lt;p&gt;   梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习&lt;/p&gt;&lt;h2 id=&quot;集成学习&quot;&gt;&lt;a href=&quot;#集成学习&quot; class=&quot;headerlink&quot; title=&quot;集成学习&quot;&gt;&lt;/a&gt;集成学习&lt;/h2&gt;&lt;h3 id=&quot;bagging-boosting和stacking&quot;&gt;&lt;a href=&quot;#bagging-boosting和stacking&quot; class=&quot;headerlink&quot; title=&quot;bagging  boosting和stacking&quot;&gt;&lt;/a&gt;bagging  boosting和stacking&lt;/h3&gt;
     
     </summary>
     

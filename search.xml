@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[梯度提升树]]></title>
     <url>%2F2019%2F10%2F10%2F%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91%2F</url>
-    <content type="text"><![CDATA[梯度提升树(Gradient Boosting Decison Tree )，以分类回归树，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。加法模型对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如 f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。 在给定训练集的情况下以及损失函数$f(x)$的情况下]]></content>
+    <content type="text"><![CDATA[梯度提升树(Gradient Boosting Decison Tree )，是机器学习竞赛中的大杀器，作为有志于成为数据挖掘工程师/机器学习工程师必须了解的算法。在了解梯度提升树之前需要先了解几个基本的概念，集成学习、加法模型以及分类回归树。在具体描述gbdt之前，先回顾一下集成学习集成学习bagging boosting和stacking 加法模型对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如 f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。 前向分布算法在给定训练集的情况下以及损失函数$L(y,f(x))$的条件下，学习加法模型$f(x)$即为最小化损失函数的问题： \min\limits_{\beta_m,\gamma_m}\sum_{i=1}^N L(y_i,\sum_{m=1}^M\beta_mb(x_i;\gamma_m))\tag{2}前向分步算法的思想：加法模型是不同模型的组合，因此从前向后每次学习一个基函数和基函数系数来逐步优化目标函数$(1)$,从而降低复杂度。 计算流程： (1).初始化第一个基函数$f_0(x)$ (2)对于m=1,2,3,…,M，极小化损失函数 (\beta_m,\gamma_m)=\arg \min\limits_{\beta,\gamma}+\beta_mb(x;\gamma_m)\tag{3}得到参数$\beta_m,\gamma_m$ (3) 更新加法模型 f_m(x)=f_{m-1}(x)+\beta_mb(x;\gamma_m)\tag{4}(4)得到加法模型 f(x)=\sum_{i=1}^M\beta_mb(x;\gamma_m)\tag{5}]]></content>
       <categories>
         <category>机器学习</category>
       </categories>
