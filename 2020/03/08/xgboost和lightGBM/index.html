@@ -56,19 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="决策树处理连续值">
-<meta name="keywords" content="决策树">
+  <meta name="description" content="Xgboost">
+<meta name="keywords" content="决策树,Xgboost,lightGBM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于决策树总结">
-<meta property="og:url" content="http://yoursite.com/2019/11/04/关于决策树总结/index.html">
+<meta property="og:title" content="xgboost和lightGBM">
+<meta property="og:url" content="http://yoursite.com/2020/03/08/xgboost和lightGBM/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="决策树处理连续值">
+<meta property="og:description" content="Xgboost">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-04T15:25:23.107Z">
+<meta property="og:updated_time" content="2020-03-08T11:12:21.378Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于决策树总结">
-<meta name="twitter:description" content="决策树处理连续值">
-  <link rel="canonical" href="http://yoursite.com/2019/11/04/关于决策树总结/">
+<meta name="twitter:title" content="xgboost和lightGBM">
+<meta name="twitter:description" content="Xgboost">
+  <link rel="canonical" href="http://yoursite.com/2020/03/08/xgboost和lightGBM/">
 
 
 <script id="page-configurations">
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title>关于决策树总结 | 心如止水</title>
+  <title>xgboost和lightGBM | 心如止水</title>
   
 
 
@@ -230,7 +230,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/04/关于决策树总结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/08/xgboost和lightGBM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="gerogegao">
@@ -242,7 +242,7 @@
       <meta itemprop="name" content="心如止水">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">关于决策树总结
+        <h1 class="post-title" itemprop="name headline">xgboost和lightGBM
 
           
         </h1>
@@ -258,7 +258,7 @@
                 
               
 
-              <time title="创建时间：2019-11-04 23:13:46 / 修改时间：23:25:23" itemprop="dateCreated datePublished" datetime="2019-11-04T23:13:46+08:00">2019-11-04</time>
+              <time title="创建时间：2020-03-08 19:11:12 / 修改时间：19:12:21" itemprop="dateCreated datePublished" datetime="2020-03-08T19:11:12+08:00">2020-03-08</time>
             </span>
           
             
@@ -290,7 +290,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="决策树处理连续值"><a href="#决策树处理连续值" class="headerlink" title="决策树处理连续值"></a>决策树处理连续值</h2>
+        <p>Xgboost</p>
+
     </div>
 
     
@@ -324,6 +325,10 @@
             
               <a href="/tags/决策树/" rel="tag"># 决策树</a>
             
+              <a href="/tags/Xgboost/" rel="tag"># Xgboost</a>
+            
+              <a href="/tags/lightGBM/" rel="tag"># lightGBM</a>
+            
           </div>
         
 
@@ -332,8 +337,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/10/梯度提升树/" rel="next" title="梯度提升树">
-                  <i class="fa fa-chevron-left"></i> 梯度提升树
+                <a href="/2019/12/15/hadoop数据倾斜及解决办法/" rel="next" title="hadoop数据倾斜及解决办法">
+                  <i class="fa fa-chevron-left"></i> hadoop数据倾斜及解决办法
                 </a>
               
             </div>
@@ -341,10 +346,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/12/15/hadoop数据倾斜及解决办法/" rel="prev" title="hadoop数据倾斜及解决办法">
-                  hadoop数据倾斜及解决办法 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -393,8 +394,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树处理连续值"><span class="nav-number">1.</span> <span class="nav-text">决策树处理连续值</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
@@ -566,6 +565,56 @@
 
   
 
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
   
 
   
