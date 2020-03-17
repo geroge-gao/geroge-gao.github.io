@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="心如止水" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":2,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Xgboost, 是GBDT的一种实现方式，并且xgboost做了一些改进和优化。1. 原理1.1 优化目标函数对于GBDT方法，都是基模型组成的加法公式。 \hat y_i = \sum_{i=1}^kf_t(x_i)\tag{1}其中$f_k$为基模型,$y_i$表示第$i$个样本预测值。正则化损失函数">
+<meta name="keywords" content="决策树,机器学习,GBDT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XGBoost原理总结">
+<meta property="og:url" content="http://yoursite.com/2020/03/09/XGBoost原理及用法总结/index.html">
+<meta property="og:site_name" content="心如止水">
+<meta property="og:description" content="Xgboost, 是GBDT的一种实现方式，并且xgboost做了一些改进和优化。1. 原理1.1 优化目标函数对于GBDT方法，都是基模型组成的加法公式。 \hat y_i = \sum_{i=1}^kf_t(x_i)\tag{1}其中$f_k$为基模型,$y_i$表示第$i$个样本预测值。正则化损失函数">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/近似算法.PNG">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/%E5%88%86%E4%BD%8D%E5%9B%BE.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/加权分位图.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/稀疏感知分裂.PNG">
+<meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/缓存优化.png">
+<meta property="og:updated_time" content="2020-03-17T16:26:31.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XGBoost原理总结">
+<meta name="twitter:description" content="Xgboost, 是GBDT的一种实现方式，并且xgboost做了一些改进和优化。1. 原理1.1 优化目标函数对于GBDT方法，都是基模型组成的加法公式。 \hat y_i = \sum_{i=1}^kf_t(x_i)\tag{1}其中$f_k$为基模型,$y_i$表示第$i$个样本预测值。正则化损失函数">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/a.png">
+  <link rel="canonical" href="http://yoursite.com/2020/03/09/XGBoost原理及用法总结/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>XGBoost原理总结 | 心如止水</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">心如止水</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/09/XGBoost原理及用法总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">XGBoost原理总结
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-09 13:59:25" itemprop="dateCreated datePublished" datetime="2020-03-09T13:59:25+08:00">2020-03-09</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-18 00:26:31" itemprop="dateModified" datetime="2020-03-18T00:26:31+08:00">2020-03-18</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/a.png" alt></p><p>Xgboost, 是GBDT的一种实现方式，并且xgboost做了一些改进和优化。</p><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h2><h3 id="1-1-优化目标函数"><a href="#1-1-优化目标函数" class="headerlink" title="1.1 优化目标函数"></a>1.1 优化目标函数</h3><p>对于GBDT方法，都是基模型组成的加法公式。</p><script type="math/tex; mode=display">
+\hat y_i = \sum_{i=1}^kf_t(x_i)\tag{1}</script><p>其中$f_k$为基模型,$y_i$表示第$i$个样本预测值。</p><p>正则化损失函数</p><a id="more"></a>
+
+
+
+
+<script type="math/tex; mode=display">
+\zeta^t=\sum_{i=1}^n l(y_i,\hat y_i^{(t-1)})+\Omega(f_t)\tag{2}</script><p>对于损失函数（2）进行二阶展开有：</p>
+<script type="math/tex; mode=display">
+\zeta^{(t)} \approx  \sum_{i=1}^n[l(y_i,\hat y_i) +g_if_t(x_i)+\frac{1}{2}h_if_t^2(x_i)]+\Omega(f_t)
+\\ where\quad \Omega(f)=\gamma T+\frac{1}{2}\lambda||w||^2\tag{3}</script><p>对于损失函数，xgboost在处理的时候进行了二阶展开，其中$g_i=\frac{\partial l(y_i,\hat y_i^{(t-1)})}{\partial \hat y_i^{(t-1)}}$, $h_i=\frac{\partial ^2l(y_i,\hat y_i^{(t-1)})}{\partial (\hat y_i^{(t-1)})^2}$。其中$g_i$和$h_i$分别对应一阶倒和二阶倒数，正则项$T$表示叶子节点数目，$w$表示叶子的分数。$\gamma$空值叶子节点的个数，保证叶子节点不会过多分裂，而$\lambda$空值叶子结点的分值，避免分值过大造成过拟合。</p>
+<p>对于第$t$步而言，前面的$t-1$步已经固定，因此有一阶、二阶梯度$g_i$和$h_i$为一个常数。因此目标函数可以化简为</p>
+<script type="math/tex; mode=display">
+\hat \zeta^t=\sum_{i=1}^n[g_if_t(x_i)+\frac{1}{2}h_if_t^2(x_i)]+\Omega(f_t)\tag{4}</script><p>定义$I_j=\{x|q(x_i)=j\}$,表示为叶子结点$j$中的样本。所以上式(3)可以重写为</p>
+<script type="math/tex; mode=display">
+\hat\zeta^{(t-1)}=\sum_{i=1}^n[g_if_t(x_i)+\frac{1}{2}h_if^2_t(x_i)]+\gamma T + \frac{1}{2}\lambda \sum_{j=1^T}w_j^2\tag{5}</script><script type="math/tex; mode=display">
+=\sum_{j=1}^T[(\sum_{i\in I_j}g_i)w_j+\frac{1}{2}(\sum_{i\in I_j}h_i+\lambda)w_j^2]+\gamma T \tag{6}</script><p>这里其实进行了一个转换，对于公式5而言，计算的损失函数是将所有数据得到损失函数。对于决策树，样本最终会落到叶子结点，因此公式6是通过叶子节点求损失值。</p>
+<p>对于固定结构的$q(x)$，即改树节点时固定的，可以计算叶子结点$j$的最优权重$w_j^*$</p>
+<script type="math/tex; mode=display">
+w_j^*=-\frac{2\sum_{i\in I_j}g_i}{\sum_{i\in I_j}h_i+\lambda}</script><p>将结果带入上式6有</p>
+<script type="math/tex; mode=display">
+\hat \zeta^{(t)}=-\frac{1}{2} \sum_{j=1}^T\frac{(\sum_{i\in I_j}g_i)^2}{\sum_{i\in I_j}h_i+\lambda}\tag{7}</script><p>定$G_j=\sum_{i\in I_j}g_i$,$H_j=\sum_{i\in I_j}h_i$，则有</p>
+<script type="math/tex; mode=display">
+w_j^*=-\frac{G_j}{H_j+\lambda}</script><p>将上式带入公式7化简有</p>
+<script type="math/tex; mode=display">
+\zeta^{(t)}=-\frac{1}{2}\sum_{j=1}^T\frac{G_j^2}{H_j+\lambda}\tag{8}</script><p>对于Xgboost使用泰勒展开的原因是因为想统一损失函数的形式，方便自定义损失函数。</p>
+<h3 id="1-2最佳切分点算法"><a href="#1-2最佳切分点算法" class="headerlink" title="1.2最佳切分点算法"></a>1.2最佳切分点算法</h3><p>xgboost支持两种实现，贪心算法和近似算法。sklearn中GBDT是贪心算法</p>
+<p>1）贪心算法，和GBDT一样，暴力枚举</p>
+<p>1、对于所有叶子节点枚举可用的特征，并且将特征值按照升序排序</p>
+<p>2、计算节点分裂时候的收益</p>
+<p>3、选择收益做大的节点和特征进行分裂</p>
+<p>4、重复1，直到分裂结束</p>
+<p>关键点在于对收益的计算</p>
+<p>假设某一节点完成分裂，在分裂前，其目标函数为</p>
+<script type="math/tex; mode=display">
+L(y,\hat y_i)=-\frac{1}{2}[\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}]+\gamma\tag{9}</script><p>分裂后的目标函数为</p>
+<script type="math/tex; mode=display">
+L=-\frac{1}{2}[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}]+2\gamma\tag{10}</script><p>所以分裂一个节点的收益可以从用式（9）-（10）</p>
+<script type="math/tex; mode=display">
+Gain=-\frac{1}{2}[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}]-\gamma</script><p>G表示所有叶子节点的梯度</p>
+<p>2)近似算法</p>
+<p>作用在于选择，当数据量比较大，无法全部读入内存时，给出近似最优解。对比贪心算法，可能在精度上有所缺失，但是提升了速度，降低了内存消耗。</p>
+<p>该算法的核心思想是根据特征分布的分位数提出候选点，然后将特征映射到候选划分的桶之中，然后统计桶中的聚合信息(指的前面的$g$和$h$)，找到所有区间最佳分裂点。</p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/近似算法.PNG" alt></p>
+<p>1、对于特征k根据分位数找到候选集合</p>
+<p>2、将样本映射到改候选集合对应的分区桶中</p>
+<p>该算法有两种变体，区别在于何时剔除候选点：</p>
+<ul>
+<li>Global：在初始阶段就给出所有候选节点，并且在后续分裂中使用相同的分裂节点。</li>
+<li>Local：每次分裂重新提出候选节点</li>
+</ul>
+<p>分位图</p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/%E5%88%86%E4%BD%8D%E5%9B%BE.png" alt="123"></p>
+<p>加权分位图：</p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/加权分位图.png" alt="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/%E5%8A%A0%E6%9D%83%E5%88%86%E4%BD%8D%E5%9B%BE.png"></p>
+<p>由于前面我们知道目标函数为</p>
+<script type="math/tex; mode=display">
+L=\sum_{i=1}^n[g_if_t(x_i)+\frac{1}{2}h_if_t^2(x_i)]+\Omega(f_t)\tag{11}</script><p>由于$g_i$和$h_i$是有上一轮迭代得到，因此都是常数，所以上式可以变形为：</p>
+<script type="math/tex; mode=display">
+L\approx\sum_{i=1}^n\frac{1}{2}h_i[(f_t(x_i)+\frac{g_i}{h_i})^2]+\Omega(f_t)+C
+\\C=-\frac{g_i^2}{h_i}\tag{12}</script><p>这样损失函数就变成了加权的形式，因此对于每个样本，其实权值是不等的，所以采用加权分位图。</p>
+<h3 id="1-3-稀疏感知分裂"><a href="#1-3-稀疏感知分裂" class="headerlink" title="1.3 稀疏感知分裂"></a>1.3 稀疏感知分裂</h3><p>在实际问题中，通常输入数据都是稀疏的，造成稀疏的原因有：</p>
+<ul>
+<li>数据缺失</li>
+<li>一些统计量常常为0</li>
+<li>特征工程的结果，如one-shot</li>
+</ul>
+<p>稀疏感知算法的目的是给每个节点一个默认的分裂方向，其思想非常简单，就是分别计算缺失值样本分裂到左边或者右边是的收益，选择收益大的一个分支作为最优缺省值方向</p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/稀疏感知分裂.PNG" alt></p>
+<h2 id="2-工程优化"><a href="#2-工程优化" class="headerlink" title="2. 工程优化"></a>2. 工程优化</h2><h3 id="2-1-块结构设计"><a href="#2-1-块结构设计" class="headerlink" title="2.1 块结构设计"></a>2.1 块结构设计</h3><p>树学习中最耗时的部分是数据排序。为了减少排序的成本，我们提出将数据存储在内存单元中，称之为block。每个block中的数据每列根据特征取值排序，并以压缩列（CSC）格式储存。这种输入数据布局只需要在训练前计算一次，可以在后续迭代中重复使用。</p>
+<ul>
+<li>每个块包含一个或者多个已经排好序的特征</li>
+<li>缺失值将不在进行排序</li>
+<li>每个特征值都会存储样本梯度统计值索引</li>
+</ul>
+<p>因为每个特征都是独立存放，因此在选择特征进行分裂的时候可以分布式实现</p>
+<h3 id="2-2-缓存方法优化"><a href="#2-2-缓存方法优化" class="headerlink" title="2.2 缓存方法优化"></a>2.2 缓存方法优化</h3><p>算法是通过行索引提取梯度统计量，但是在排序之后就会乱掉，不能够直接访问。并且当统计量没法放进CPU缓存是，会导致访问失败，因此xgb给每个线程分配一个内部缓冲区。</p>
+<p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/缓存优化.png" alt="https://raw.githubusercontent.com/geroge-gao/Images/master/Xgboost/%E7%BC%93%E5%AD%98%E4%BC%98%E5%8C%96.png"></p>
+<h3 id="2-3-核外快计算方式"><a href="#2-3-核外快计算方式" class="headerlink" title="2.3 核外快计算方式"></a>2.3 核外快计算方式</h3><p>对于数据量比较大的数据，没有办法存储到内存，可以考虑部分读取，将数据存储到硬盘，但是硬盘读取会占用大量时间</p>
+<p>XGBoost采用两种方式降低硬盘读取开销</p>
+<p>1、块压缩：对Block进行案列压缩，并且在读取时解压</p>
+<p>2、块拆分：将每个块存储到不同的磁盘，然后从多个磁盘读取增加吞吐量。</p>
+<h2 id="3-GBDT和XGBoost区别"><a href="#3-GBDT和XGBoost区别" class="headerlink" title="3. GBDT和XGBoost区别"></a>3. GBDT和XGBoost区别</h2><ul>
+<li>传统GBDT以CART作为基分类器，xgboost还支持线性分类器，这个时候xgboost相当于带L1和L2正则化项的逻辑斯蒂回归（分类问题）或者线性回归（回归问题）。</li>
+<li>传统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。顺便提一下，xgboost工具支持自定义代价函数，只要函数可一阶和二阶求导。</li>
+<li>xgboost在代价函数里加入了正则项，用于控制模型的复杂度。正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和。从Bias-variance tradeoff角度来讲，正则项降低了模型的variance，使学习出来的模型更加简单，防止过拟合，这也是xgboost优于传统GBDT的一个特性。</li>
+<li>Shrinkage（缩减），相当于学习速率（xgboost中的eta）。xgboost在进行完一次迭代后，会将叶子节点的权重乘上该系数，主要是为了削弱每棵树的影响，让后面有更大的学习空间。实际应用中，一般把eta设置得小一点，然后迭代次数设置得大一点。（补充：传统GBDT的实现也有学习速率）</li>
+<li>列抽样（column subsampling）。xgboost借鉴了随机森林的做法，支持列抽样，不仅能降低过拟合，还能减少计算，这也是xgboost异于传统gbdt的一个特性。</li>
+<li>对缺失值的处理。对于特征的值有缺失的样本，xgboost可以自动学习出它的分裂方向。</li>
+<li>xgboost工具支持并行。boosting不是一种串行的结构吗?怎么并行的？注意xgboost的并行不是tree粒度的并行，xgboost也是一次迭代完才能进行下一次迭代的（第t次迭代的代价函数里包含了前面t-1次迭代的预测值）。xgboost的并行是在特征粒度上的。我们知道，决策树的学习最耗时的一个步骤就是对特征的值进行排序（因为要确定最佳分割点），xgboost在训练之前，预先对数据进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行。</li>
+<li>可并行的近似直方图算法。树节点在进行分裂时，我们需要计算每个特征的每个分割点对应的增益，即用贪心法枚举所有可能的分割点。当数据无法一次载入内存或者在分布式情况下，贪心算法效率就会变得很低，所以xgboost还提出了一种可并行的近似直方图算法，用于高效地生成候选的分割点。</li>
+</ul>
+<p>调参技巧略，直接看API就行了。。。。懒得总结了</p>
+<p>参考资料</p>
+<p>[1].<a href="https://www.zhihu.com/question/41354392/answer/98658997" target="_blank" rel="noopener">https://www.zhihu.com/question/41354392/answer/98658997</a></p>
+<p>[2].<a href="https://mp.weixin.qq.com/s/LoX987dypDg8jbeTJMpEPQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/LoX987dypDg8jbeTJMpEPQ</a></p>
+<p>[3].<a href="https://zhuanlan.zhihu.com/p/97753849" target="_blank" rel="noopener">行抽样、列抽样</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/决策树/" rel="tag"># 决策树</a>
+            
+              <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+            
+              <a href="/tags/GBDT/" rel="tag"># GBDT</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/08/xgboost和lightGBM/" rel="next" title="xgboost和lightGBM">
+                  <i class="fa fa-chevron-left"></i> xgboost和lightGBM
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/14/LightGBM论文笔记/" rel="prev" title="LightGBM论文笔记">
+                  LightGBM论文笔记 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-原理"><span class="nav-number">1.</span> <span class="nav-text">1. 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-优化目标函数"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 优化目标函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2最佳切分点算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2最佳切分点算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-稀疏感知分裂"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 稀疏感知分裂</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-工程优化"><span class="nav-number">2.</span> <span class="nav-text">2. 工程优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-块结构设计"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 块结构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-缓存方法优化"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 缓存方法优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-核外快计算方式"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 核外快计算方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-GBDT和XGBoost区别"><span class="nav-number">3.</span> <span class="nav-text">3. GBDT和XGBoost区别</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avator.png"
+      alt="gerogegao">
+  <p class="site-author-name" itemprop="name">gerogegao</p>
+  <div class="site-description" itemprop="description">世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/geroge-gao" title="GitHub &rarr; https://github.com/geroge-gao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/gzj_1101@163.com" title="E-Mail &rarr; gzj_1101@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/xiao-gao-2/activities" title="知乎 &rarr; https://www.zhihu.com/people/xiao-gao-2/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by gerogegao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>

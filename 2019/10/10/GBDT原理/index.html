@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="心如止水" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":2,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="GBDT主要由三个概念组成：Regression Decistion Tree（即DT)，Gradient Boosting（即GB)，Shrinkage（算法的一个重要演进分枝，目前大部分源码都按该版本实现）。搞定这三个概念后就能明白GBDT是如何工作的，要继续理解它如何用于搜索排序则需要额外理解RankNet概念，之后便功德圆满。下文将逐个碎片介绍，最终把整张图拼出来。">
+<meta name="keywords" content="决策树,集成学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="梯度提升树">
+<meta property="og:url" content="http://yoursite.com/2019/10/10/GBDT原理/index.html">
+<meta property="og:site_name" content="心如止水">
+<meta property="og:description" content="GBDT主要由三个概念组成：Regression Decistion Tree（即DT)，Gradient Boosting（即GB)，Shrinkage（算法的一个重要演进分枝，目前大部分源码都按该版本实现）。搞定这三个概念后就能明白GBDT是如何工作的，要继续理解它如何用于搜索排序则需要额外理解RankNet概念，之后便功德圆满。下文将逐个碎片介绍，最终把整张图拼出来。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-16T07:46:34.602Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="梯度提升树">
+<meta name="twitter:description" content="GBDT主要由三个概念组成：Regression Decistion Tree（即DT)，Gradient Boosting（即GB)，Shrinkage（算法的一个重要演进分枝，目前大部分源码都按该版本实现）。搞定这三个概念后就能明白GBDT是如何工作的，要继续理解它如何用于搜索排序则需要额外理解RankNet概念，之后便功德圆满。下文将逐个碎片介绍，最终把整张图拼出来。">
+  <link rel="canonical" href="http://yoursite.com/2019/10/10/GBDT原理/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>梯度提升树 | 心如止水</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">心如止水</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/GBDT原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">梯度提升树
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-10 23:10:38" itemprop="dateCreated datePublished" datetime="2019-10-10T23:10:38+08:00">2019-10-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-16 15:46:34" itemprop="dateModified" datetime="2020-03-16T15:46:34+08:00">2020-03-16</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>GBDT主要由三个概念组成：Regression Decistion Tree（即DT)，Gradient Boosting（即GB)，Shrinkage（算法的一个重要演进分枝，目前大部分源码都按该版本实现）。搞定这三个概念后就能明白GBDT是如何工作的，要继续理解它如何用于搜索排序则需要额外理解RankNet概念，之后便功德圆满。下文将逐个碎片介绍，最终把整张图拼出来。 </p><a id="more"></a>
+<h2 id="加法模型"><a href="#加法模型" class="headerlink" title="加法模型"></a>加法模型</h2><p>对于算法模型而言，一个性能弱的算法模型可能很难得到很好的效果，加法模型的思想是将性能较弱的模型通过加权得到一个性能较强的模型。形如</p>
+<script type="math/tex; mode=display">
+f(x)=\sum_{m=1}^{M}\beta_m b(x;\gamma_m)\tag{1}</script><p>其中$b(x;y_m)$表示基函数，$\gamma_m$表示基函数系数，$\beta_m$表示基函数系数。</p>
+<h2 id="前向分布算法"><a href="#前向分布算法" class="headerlink" title="前向分布算法"></a>前向分布算法</h2><p>在给定训练集的情况下以及损失函数$L(y,f(x))$的条件下，学习加法模型$f(x)$即为最小化损失函数的问题：</p>
+<script type="math/tex; mode=display">
+\min\limits_{\beta_m,\gamma_m}\sum_{i=1}^N L(y_i,\sum_{m=1}^M\beta_mb(x_i;\gamma_m))\tag{2}</script><p>前向分步算法的思想：加法模型是不同模型的组合，因此从前向后每次学习一个基函数和基函数系数来逐步优化目标函数$(1)$,从而降低复杂度。</p>
+<p>计算流程：</p>
+<p>(1).初始化第一个基函数$f_0(x)$</p>
+<p>(2)对于$m=1,2,3,…,M$，极小化损失函数</p>
+<script type="math/tex; mode=display">
+(\beta_m,\gamma_m)=\arg \min\limits_{\beta,\gamma}+\beta_mb(x;\gamma_m)\tag{3}</script><p>得到参数$\beta_m,\gamma_m$</p>
+<p>(3) 更新加法模型</p>
+<script type="math/tex; mode=display">
+f_m(x)=f_{m-1}(x)+\beta_mb(x;\gamma_m)\tag{4}</script><p>(4)得到加法模型</p>
+<script type="math/tex; mode=display">
+f(x)=\sum_{i=1}^M\beta_mb(x;\gamma_m)\tag{5}</script><h2 id="GBDT梯度提升模型"><a href="#GBDT梯度提升模型" class="headerlink" title="GBDT梯度提升模型"></a>GBDT梯度提升模型</h2><h3 id="提升树算法"><a href="#提升树算法" class="headerlink" title="提升树算法"></a>提升树算法</h3><p>提升方法可以总结为加法模型与前向分布算法，以决策树为基函数的模型成为<strong>提升树</strong>，无论是分类问题还是回归问题，都是基于回归树(这点和统计学系方法里面不一样)，提升树算法则是采用前向分步算法来更新加法模型。对于提升树，基函数变为决策树，所以加法模型为</p>
+<script type="math/tex; mode=display">
+f_m(x)=\sum_{i=1}^MT(x;w_m)\tag{6}</script><p>其中$M$为决策树的个数，$w$为决策树的参数，$T$表示决策树。</p>
+<p>初始化第一棵决策树，第$m$部的模型为</p>
+<script type="math/tex; mode=display">
+f_m(x)=f_{m-1}(x)+T(x;w)\tag{7}</script><p>通过最小化损失函数确定下一棵决策树的参数$w_m$</p>
+<script type="math/tex; mode=display">
+\arg\min\limits_{w_m}\sum_{i=1}^NL(y_i,f_{m-1}+T(x_i,w_m))</script><p>当采用平方误差时</p>
+<script type="math/tex; mode=display">
+L(y,f(x))=(y-f(x))^2\tag{8}</script><p>损失函数变为</p>
+<script type="math/tex; mode=display">
+L(y)=(y-f_{m-1}(x)-T(x;w_m))^2</script><script type="math/tex; mode=display">
+=[r-T(x;w_m)]^2\tag{9}</script><p>其中残差$r=y-f_{m-1}(x)$，所以最后的目的就是为了是$T(x;w_m)$的值更加接近残差，从而达到最小化损失函数的作用。</p>
+<h3 id="回归问题提升树"><a href="#回归问题提升树" class="headerlink" title="回归问题提升树"></a>回归问题提升树</h3><p>1.计算出第一颗树第一棵提升树</p>
+<script type="math/tex; mode=display">
+f_0(x)=\arg \min\limits\sum_{i=1}^NL(y_i,c)\tag{10}</script><p>2.得到提升树的残差</p>
+<script type="math/tex; mode=display">
+r_{mi}=y_i-f_{m-1}(x_i), i=1,2,3....,N\tag{11}</script><p>3.通过拟合残茶学习回归树，得到$T_m(x;w_m)$</p>
+<p>4.更新提升树</p>
+<script type="math/tex; mode=display">
+f_m(x)=f_{m-1}(x)+T(x;w_m)\tag{12}</script><h2 id="梯度提升"><a href="#梯度提升" class="headerlink" title="梯度提升"></a>梯度提升</h2><p>梯度提升本质其实是利用梯度下降算法来对前向分步算法进行优化求解的方法。其关键是利用<strong>损失函数负梯度</strong>在当前模型的值作为残差的近似值，进行一个拟合。</p>
+<script type="math/tex; mode=display">
+r_{mi}=-[\frac{\partial L(y,f(x_i))}{\partial f(x_i)}]_{f(x_i)=f_m(x_i)
+}\tag{13}</script><p>利用负梯度代替残差的原因是因为只有在损失函数为平方差的时候，梯度才等于残差，但是当损失函数比较复杂的时候，此时梯度是不等于残差的。</p>
+<p>对于特征的选择和回归树一样，同样是遍历所有特征找到最佳切分点。</p>
+<p>回归例子可以参见统计学习方法。</p>
+<h2 id="GBDT用于分类和回归的区别"><a href="#GBDT用于分类和回归的区别" class="headerlink" title="GBDT用于分类和回归的区别"></a>GBDT用于分类和回归的区别</h2><p>前面主要将的是GBDT的思想，利用残差不断的拟合，直到最后接近目标。但是对于对于分类和回归任务的处理，主要有以下几个方面不一样。</p>
+<h3 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h3><p>1、分裂节点的评价标准不同</p>
+<p>对于回归类问题，分裂节点的时候主要评价方式为</p>
+<p>(1)平方误差</p>
+<script type="math/tex; mode=display">
+L(x,c)=min \sum_{i=1}^m\sum_{j\in R_i}(x_j-c_i)^2</script><p>将特征划分为m个不同的区域$R_i$，然后求出每个区域的平方误差求和，平方误差和最小的特征和切分点。</p>
+<p>(2)绝地值误差</p>
+<script type="math/tex; mode=display">
+L(x,c)=min \sum_{i=1}^m\sum_{j\in R_i}|x_j-c_i|</script><p>(3)friedman_mse：费尔德曼均方误差，改进后的均方误差，一般能够达到比较好的效果</p>
+<p>对于分类问题，其节点分类的评价方式为</p>
+<p>(1)信息熵(<strong>entropy</strong>)</p>
+<script type="math/tex; mode=display">
+H(x)=-\sum_{i=1}^np_i\log p_i</script><p>(2)gini,基尼系数(信息增益)</p>
+<script type="math/tex; mode=display">
+g(D,A)=H(D)-H(D|A)</script><p>详细计算过程见统计学习方法。</p>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>在介绍分类的原理之前首先要了解一下对数损失函数</p>
+<script type="math/tex; mode=display">
+L(y,P(Y|X))=log P(Y|X)\tag{14}</script><p>对于分类任务，GBDT是结合回归加分类模型计算每种分类的概率，对于二分类，采用的是logistic进行分类</p>
+<script type="math/tex; mode=display">
+P(Y=1|X)=\frac{1}{1+exp(-\sum_{i=1}^Mf_i(x))}\tag{15}</script><script type="math/tex; mode=display">
+P(Y=0|X)=\frac{1}{1+exp(\sum_{i=1}^Mf_i(x))}\tag{16}</script><p>令$h_\theta(x)=\frac{1}{1+exp(-\sum_{i=1}^Mf_i(x))}$</p>
+<p>所以有</p>
+<script type="math/tex; mode=display">
+P(Y=1|X)=h_\theta(x)\tag{17}</script><script type="math/tex; mode=display">
+P(Y=0|X)=1-h_\theta(x)\tag{18}</script><script type="math/tex; mode=display">
+P(Y|X)=h_\theta(x)^{y_i}(1-h_\theta(x))^{1-y_i}</script><p>损失函数为</p>
+<script type="math/tex; mode=display">
+J_\theta(x)=-\sum_{i=1}^N [y_ilogh_\theta(x)+(1-y_i)log(1-h_\theta(x))]\tag{19}</script><p>所以经过计算有</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial h_\theta(x)}=y-\hat y</script><p>对于多分类问题</p>
+<p>损失函数为交叉熵</p>
+<script type="math/tex; mode=display">
+L(y,p(y|x))=-\sum_{i=1}^M y_ilog {p_i}\tag{20}</script><p>其中$i$表示所属类别，$M$表示分类树,$p_i$表示属于$i$的概率</p>
+<p>并且有</p>
+<script type="math/tex; mode=display">
+p(y=i|x)=\frac{exp(F_i(x))}{\sum_{i=1}^Mexp(F_i(x))}\tag{21}</script><p>同样求梯度有</p>
+<script type="math/tex; mode=display">
+r_{mi}=-\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}|_{f(x_i)=f_{m-1}(x_i)}</script><p>回归损失函数</p>
+<p>(1)平方损失函数</p>
+<script type="math/tex; mode=display">
+L(y,x)=\sum_{i=1}^n(y_i-f(x_i))^2</script><p>(2)绝对值损失函数</p>
+<script type="math/tex; mode=display">
+L(y,x)=\sum_{i=1}^n|y_i-f(x_i)|</script><p>(3)huber损失函数</p>
+<script type="math/tex; mode=display">
+L(y)=\left\{
+\begin{array}{rcl}
+\frac{1}{2}(y-f(x))^2 & & {|y-f(x)|\leq\delta}\\
+\delta*|y-f(x)-\frac{1}{2}\delta| & & {|y-f(x)|>\delta}
+
+\end{array} \right.</script><h2 id="GBDT的正则化"><a href="#GBDT的正则化" class="headerlink" title="GBDT的正则化"></a>GBDT的正则化</h2><p>和Adaboost一样，我们也需要对GBDT进行正则化，防止过拟合。GBDT的正则化主要有三种方式。</p>
+<p>（1）第一种是和Adaboost类似的正则化项，即<strong>步长</strong>（learning rate）。定义为ν,对于前面的弱学习器的迭代 <script type="math/tex">f_k(x)=f_{k-1}(x)+h_k(x)</script> 如果我们加上了正则化项，则有 <script type="math/tex">f_k(x)=f_{k-1}(x)+v\cdot h_k(x)</script> ν的取值范围为0&lt;ν≤10。对于同样的训练集学习效果，较小的ν意味着我们需要更多的弱学习器的迭代次数。通常我们用步长和迭代最大次数一起来决定算法的拟合效果。</p>
+<p>（2）第二种正则化的方式是通过<strong>子采样比例</strong>（subsample）。取值为(0,1]。注意这里的子采样和随机森林不一样，随机森林使用的是放回抽样，而这里是不放回抽样。如果取值为1，则全部样本都使用，等于没有使用子采样。如果取值小于1，则只有一部分样本会去做GBDT的决策树拟合。选择小于1的比例可以减少方差，即防止过拟合，但是会增加样本拟合的偏差，因此取值不能太低。推荐在[0.5, 0.8]之间。</p>
+<p>使用了子采样的GBDT有时也称作随机梯度提升树(Stochastic Gradient Boosting Tree, SGBT)。由于使用了子采样，程序可以通过采样分发到不同的任务去做boosting的迭代过程，最后形成新树，从而减少弱学习器难以并行学习的弱点。（注：这一点没明白。。）</p>
+<p>（3）第三种是对于弱学习器即CART回归树进行正则化<strong>剪枝</strong>。在决策树章节里我们已经讲过，这里就不重复了。</p>
+<h2 id="调参经验"><a href="#调参经验" class="headerlink" title="调参经验"></a>调参经验</h2><h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>sklearn.ensemble.<code>`RandomForestClassifier</code></p>
+<p>Parameters</p>
+<ul>
+<li><p><strong>n_estimators</strong> ：树的个数，迭代次数</p>
+<p>The number of trees in the forest.<em>Changed in version 0.22:</em> The default value of <code>n_estimators</code> changed from 10 to 100 in 0.22.</p>
+</li>
+<li><p><strong>criterion</strong>： 叶子结点分裂的方式，默认的是gini和entropy</p>
+</li>
+<li><p><strong>max_depth</strong>：树的深度，默认为空，会一直分裂，直到无法继续分裂</p>
+</li>
+<li><p><strong>min_samples_split</strong>： 分裂一个节点所需要的最小样本</p>
+<ul>
+<li>int：表示样本数</li>
+<li>float 表示的百分比 </li>
+</ul>
+</li>
+<li><p><strong>min_samples_leaf</strong>：保持一颗叶子结点所需要的样本数，该参数能够对模型进行平滑，特别在回归任务中。int和float和<strong>min_samples_split</strong>一样。</p>
+</li>
+<li><p><strong>min_weight_fraction_leaf</strong>：叶子结点所有权重和的最小值，<strong>如果分布相差很大或者有很多缺失值，可以引入该参数</strong></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>max_features</strong>：当考虑最佳分割点是考虑的特征数。</p>
+<ul>
+<li>如果是float型，表示的是百分比</li>
+<li>如果是’auto’ or ‘log2’，表示sqrt(n_features)</li>
+<li>如果是log2, 表示log2(n_features)</li>
+</ul>
+</li>
+<li><p><strong>max_leaf_nodes </strong>: 最大叶子结点，用于防止过拟合 </p>
+</li>
+<li><p><strong>min_impurity_split</strong>：早停的阈值，如果一个节点的不纯度高于该值，则分裂，否则为叶子结点</p>
+<p>Threshold for early stopping in tree growth. A node will split if its impurity is above the threshold, otherwise it is a leaf.<em>Deprecated since version 0.19:</em> <code>min_impurity_split</code> has been deprecated in favor of <code>min_impurity_decrease</code> in 0.19. The default value of <code>min_impurity_split</code> will change from 1e-7 to 0 in 0.23 and it will be removed in 0.25. Use <code>min_impurity_decrease</code> instead.</p>
+</li>
+<li><p><strong>bootstrap</strong>： 是否使用bootstrap采样，为否表示使用整个数据集</p>
+</li>
+<li><p><strong>oob_score</strong>：袋外精度来泛化</p>
+<p>Whether to use out-of-bag samples to estimate the generalization accuracy.</p>
+</li>
+<li><p><strong>class_weight</strong>：类别权重，用于样本分布不均衡时使用</p>
+<ul>
+<li>‘’dict, list of dicts, “balanced”, “balanced_subsample” or None, optional (default=None）</li>
+<li>格式为<code>{class_label: weight}</code> ，例如 {0: 1, 1: 1}</li>
+<li>’balanced‘模式下会自动调整权值，根据训练数据中类别出现频率， n_samples/(n_class *np.bincount())</li>
+<li>‘balanced_subsample’和balanced一样，区别在于才用的boostrap</li>
+</ul>
+</li>
+<li><p><strong>max_samples</strong>：从训练集中取出的每个样本量</p>
+<ul>
+<li>None：表示使用所有样本</li>
+<li>如果为int 表示为该值</li>
+<li>float表示 百分比</li>
+</ul>
+</li>
+</ul>
+<p><em>class</em> <code>sklearn.ensemble.``GradientBoostingRegressor</code></p>
+<ul>
+<li><p><strong>loss</strong> ：损失函数，默认为ls</p>
+<ul>
+<li><p>‘ls’ 平方损失函数，损失函数为$L(y)=(y-f(x))^2$</p>
+</li>
+<li><p>‘lad’，绝对值 ,损失函数 $L(y)=|y-f(x)|$</p>
+</li>
+<li><p>‘huber’： 两者的结合</p>
+<script type="math/tex; mode=display">
+L(y)=\left\{
+\begin{array}{rcl}
+\frac{1}{2}(y-f(x))^2 & & {|y-f(x)|\leq\delta}\\
+\delta*|y-f(x)-\frac{1}{2}\delta| & & {|y-f(x)|>\delta}
+
+\end{array} \right.</script></li>
+</ul>
+</li>
+<li><p><strong>subsample</strong>：子采样比例，子采样会减少方差，增大偏差</p>
+</li>
+<li><p><strong>criterion</strong>： 衡量节点分裂质量的指标</p>
+<ul>
+<li>friedman_mse, </li>
+<li>‘mse’</li>
+<li>’mae‘</li>
+</ul>
+</li>
+</ul>
+<p><em>New in version 0.18.</em></p>
+<ul>
+<li><p><strong>min_samples_split</strong>: 和分类一样</p>
+</li>
+<li><p><strong>tol</strong>：学习率</p>
+</li>
+</ul>
+<p>参考资料</p>
+<p>[1]<a href="https://zhuanlan.zhihu.com/p/86281279" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/86281279</a></p>
+<p>[2].统计学习方法</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/决策树/" rel="tag"># 决策树</a>
+            
+              <a href="/tags/集成学习/" rel="tag"># 集成学习</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/05/pandas的基本用法/" rel="next" title="pandas的基本用法">
+                  <i class="fa fa-chevron-left"></i> pandas的基本用法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/04/关于决策树总结/" rel="prev" title="关于决策树总结">
+                  关于决策树总结 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加法模型"><span class="nav-number">1.</span> <span class="nav-text">加法模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前向分布算法"><span class="nav-number">2.</span> <span class="nav-text">前向分布算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT梯度提升模型"><span class="nav-number">3.</span> <span class="nav-text">GBDT梯度提升模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提升树算法"><span class="nav-number">3.1.</span> <span class="nav-text">提升树算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回归问题提升树"><span class="nav-number">3.2.</span> <span class="nav-text">回归问题提升树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度提升"><span class="nav-number">4.</span> <span class="nav-text">梯度提升</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT用于分类和回归的区别"><span class="nav-number">5.</span> <span class="nav-text">GBDT用于分类和回归的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特征选择"><span class="nav-number">5.1.</span> <span class="nav-text">特征选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">5.2.</span> <span class="nav-text">损失函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT的正则化"><span class="nav-number">6.</span> <span class="nav-text">GBDT的正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调参经验"><span class="nav-number">7.</span> <span class="nav-text">调参经验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类"><span class="nav-number">7.1.</span> <span class="nav-text">分类</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avator.png"
+      alt="gerogegao">
+  <p class="site-author-name" itemprop="name">gerogegao</p>
+  <div class="site-description" itemprop="description">世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/geroge-gao" title="GitHub &rarr; https://github.com/geroge-gao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/gzj_1101@163.com" title="E-Mail &rarr; gzj_1101@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/xiao-gao-2/activities" title="知乎 &rarr; https://www.zhihu.com/people/xiao-gao-2/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by gerogegao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>
