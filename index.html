@@ -296,7 +296,7 @@
   
   
   <div class="post-block home">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/09/XGBoost原理及用法总结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/09/XGBoost原理总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="gerogegao">
@@ -310,7 +310,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
             
-            <a href="/2020/03/09/XGBoost原理及用法总结/" class="post-title-link" itemprop="url">XGBoost原理总结</a>
+            <a href="/2020/03/09/XGBoost原理总结/" class="post-title-link" itemprop="url">XGBoost原理总结</a>
           
         </h1>
 
@@ -370,7 +370,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/03/09/XGBoost原理及用法总结/#more" rel="contents">
+              <a class="btn" href="/2020/03/09/XGBoost原理总结/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -428,11 +428,19 @@
                 
               
 
-              <time title="创建时间：2020-03-08 19:11:12 / 修改时间：19:12:21" itemprop="dateCreated datePublished" datetime="2020-03-08T19:11:12+08:00">2020-03-08</time>
+              <time title="创建时间：2020-03-08 19:11:12" itemprop="dateCreated datePublished" datetime="2020-03-08T19:11:12+08:00">2020-03-08</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-20 16:35:24" itemprop="dateModified" datetime="2020-03-20T16:35:24+08:00">2020-03-20</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -460,8 +468,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Xgboost</p>
-
+          <p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/lightGBM/优化点.PNG" alt="https://raw.githubusercontent.com/geroge-gao/Images/master/lightGBM/%E4%BC%98%E5%8C%96%E7%82%B9.PNG"></p><h2 id="LightGBM提出动机"><a href="#LightGBM提出动机" class="headerlink" title="LightGBM提出动机"></a>LightGBM提出动机</h2><p>为了解决GBDT在海量数据中遇到的问题，让GBDT算法更好的适用于工业实践。</p><p>1、XGBoost的缺点</p><ul>
+<li>需要保存特征值和排序结果，还需要保存排序的索引</li>
+<li>每次分裂一个点的时候，都需要计算收益</li>
+<li>对cache优化不友好，容易造成cache miss</li>
+</ul><p>2、LightGBM的优化</p><ul>
+<li>单边梯度采样GOSS</li>
+<li>直方图算法</li>
+<li>互斥特征捆绑算法</li>
+<li>Leaf-Wise分裂算法</li>
+<li>类别特征最有分裂</li>
+<li>并行学习优化</li>
+<li>cache命中率优化</li>
+</ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/03/08/xgboost和lightGBM/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
