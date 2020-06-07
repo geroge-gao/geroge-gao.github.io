@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[word embedding作用及用法]]></title>
+    <url>%2F2020%2F06%2F07%2Fword-embedding%E4%BD%9C%E7%94%A8%E5%8F%8A%E7%94%A8%E6%B3%95%2F</url>
+    <content type="text"><![CDATA[关于word embedding总结]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>深度学习</tag>
+        <tag>NLP</tag>
+        <tag>词向量</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LightGBM论文笔记]]></title>
     <url>%2F2020%2F03%2F14%2FLightGBM%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%2F</url>
     <content type="text"></content>
