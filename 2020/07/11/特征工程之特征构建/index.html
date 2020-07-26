@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="心如止水" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":2,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="类别特征 几乎总是需要做一些处理 类别特征种类过多会造成稀疏数据 难以填充缺失值 热独编码(Onehot-encoding) 通常和大多数线性算法一起使用 稀疏格式对内存友好 大多数方法无法处理缺失或者不可见数据 对于没有大小区分的类别特征，可以使用Oneshot-encoding 哈希编码(Hash encoding)">
+<meta name="keywords" content="特征工程,数据挖掘,特征选择">
+<meta property="og:type" content="article">
+<meta property="og:title" content="特征工程之特征构建">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/特征工程之特征构建/index.html">
+<meta property="og:site_name" content="心如止水">
+<meta property="og:description" content="类别特征 几乎总是需要做一些处理 类别特征种类过多会造成稀疏数据 难以填充缺失值 热独编码(Onehot-encoding) 通常和大多数线性算法一起使用 稀疏格式对内存友好 大多数方法无法处理缺失或者不可见数据 对于没有大小区分的类别特征，可以使用Oneshot-encoding 哈希编码(Hash encoding)">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-26T15:16:21.407Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="特征工程之特征构建">
+<meta name="twitter:description" content="类别特征 几乎总是需要做一些处理 类别特征种类过多会造成稀疏数据 难以填充缺失值 热独编码(Onehot-encoding) 通常和大多数线性算法一起使用 稀疏格式对内存友好 大多数方法无法处理缺失或者不可见数据 对于没有大小区分的类别特征，可以使用Oneshot-encoding 哈希编码(Hash encoding)">
+  <link rel="canonical" href="http://yoursite.com/2020/07/11/特征工程之特征构建/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>特征工程之特征构建 | 心如止水</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">心如止水</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/特征工程之特征构建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">特征工程之特征构建
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-11 22:00:53" itemprop="dateCreated datePublished" datetime="2020-07-11T22:00:53+08:00">2020-07-11</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-26 23:16:21" itemprop="dateModified" datetime="2020-07-26T23:16:21+08:00">2020-07-26</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="类别特征"><a href="#类别特征" class="headerlink" title="类别特征"></a>类别特征</h1><ul>
+<li>几乎总是需要做一些处理</li>
+<li>类别特征种类过多会造成稀疏数据</li>
+<li>难以填充缺失值</li>
+</ul><h2 id="热独编码-Onehot-encoding"><a href="#热独编码-Onehot-encoding" class="headerlink" title="热独编码(Onehot-encoding)"></a>热独编码(Onehot-encoding)</h2><ul>
+<li>通常和大多数线性算法一起使用</li>
+<li>稀疏格式对内存友好</li>
+<li>大多数方法无法处理缺失或者不可见数据</li>
+<li>对于没有大小区分的类别特征，可以使用Oneshot-encoding</li>
+</ul><h2 id="哈希编码-Hash-encoding"><a href="#哈希编码-Hash-encoding" class="headerlink" title="哈希编码(Hash encoding)"></a>哈希编码(Hash encoding)</h2><a id="more"></a>
+
+<ul>
+<li>固定长度的oneHot-encoding</li>
+<li>避免数据过度稀疏</li>
+<li>碰撞通常会降低准确率，但是也能提高</li>
+<li>可以很好地处理新变量</li>
+</ul>
+<p>Label encoding</p>
+<ul>
+<li>给每个类别变量一个唯一的数字ID</li>
+<li>对于非线性树模型比较有用</li>
+<li>不会增加数据维度</li>
+<li>随机化映射 car_var-&gt;num_id的映射，在训练，平均，对精度能有小提升(小提升)</li>
+</ul>
+<h2 id="计数编码-Count-encoding"><a href="#计数编码-Count-encoding" class="headerlink" title="计数编码(Count encoding)"></a>计数编码(Count encoding)</h2><ul>
+<li>在训练集中用他们的统计量替代类别特征</li>
+<li>对于线性和非线性算法都有用</li>
+<li>对于异常值很敏感</li>
+<li>增加log转换，对于统计量可能更好</li>
+<li>用1替代无法观测数据</li>
+<li>可能会造成冲突，同一个编码，不同的变量值</li>
+</ul>
+<h2 id="计数排名编码-LabelCount-encoding"><a href="#计数排名编码-LabelCount-encoding" class="headerlink" title="计数排名编码(LabelCount encoding)"></a>计数排名编码(LabelCount encoding)</h2><ul>
+<li>通过统计量给类别特征排序</li>
+<li>对于线性和非线性算法都有用</li>
+<li>对异常值不敏感</li>
+<li>不会给同一个变量不同的值</li>
+</ul>
+<h2 id="Category-Embedding"><a href="#Category-Embedding" class="headerlink" title="Category Embedding"></a>Category Embedding</h2><ul>
+<li>使用神经网络对类别特征创建一个稠密的embeddings，找到不同类别特征关联性</li>
+</ul>
+<p>NaN encoding：</p>
+<ul>
+<li>给NaN 值一个明确的编码，而不是忽略</li>
+<li>NaN里面也包含信息</li>
+<li>小心过拟合</li>
+<li>仅仅当训练集和测试集NaN都是同样的原因造成，或者本地验证结果证明NaN包含信息(即这种方法是有效果的)</li>
+</ul>
+<h1 id="数字特征"><a href="#数字特征" class="headerlink" title="数字特征"></a>数字特征</h1><ul>
+<li>对于算法更可读</li>
+<li>很容易填补缺失值</li>
+</ul>
+<h2 id="截断-Rounding"><a href="#截断-Rounding" class="headerlink" title="截断(Rounding)"></a>截断(Rounding)</h2><ul>
+<li>对数字变量四舍五入</li>
+<li>有损压缩，保留数据最重要的特征</li>
+<li>有时候精度太准确只是噪声</li>
+<li>四舍五入后的变量能够当成类别特征处理</li>
+<li>在四舍五入之前可以进行log转换</li>
+</ul>
+<h2 id="分桶-Binning"><a href="#分桶-Binning" class="headerlink" title="分桶(Binning)"></a>分桶(Binning)</h2><ul>
+<li>对数据进行分桶，并且赋予一个分桶ID</li>
+<li>分桶能够使用分位数或者模型来找到最佳分桶</li>
+<li>能够很好地处理超出训练集范围的数据</li>
+</ul>
+<p>分桶的作用，当一个特征的数值比较大，但是模型对数值比较敏感的时候，最好的方法是分桶，将数值变量分配到一个桶里。</p>
+<h2 id="缩放-Scaling"><a href="#缩放-Scaling" class="headerlink" title="缩放(Scaling)"></a>缩放(Scaling)</h2><ul>
+<li>将数字变量缩放到一个明确的范围</li>
+<li>Standard(Z) Scaling</li>
+<li>MinMax Scaling</li>
+<li>Root Scaling</li>
+<li>Log Scaling</li>
+</ul>
+<p>原因：因为部分模型例如线性回归、逻辑回归等对于数据输入比较敏感将数值缩放到一个维度，</p>
+<ul>
+<li>标准化Standarisation和归一化Normalisation</li>
+<li>归一化的原因<ul>
+<li>当变量维度不同的时候，对模型产生的作用不一致，这时候需要归一化</li>
+<li>神经网络在特征缩放之后训练速度更快</li>
+</ul>
+</li>
+<li>特征缩放的时机<ul>
+<li>KNN</li>
+<li>K-means</li>
+<li>NN</li>
+</ul>
+</li>
+<li>树模型不需要特征缩放</li>
+</ul>
+<h2 id="填充-Imputation"><a href="#填充-Imputation" class="headerlink" title="填充(Imputation)"></a>填充(Imputation)</h2><ul>
+<li>对缺失值进行填充</li>
+<li>硬编码能够和填充结合起来</li>
+<li>Mean：最常见的</li>
+<li>Median：对于异常值更有鲁棒性</li>
+<li>Igonre：忽略，后面在处理或者不处理？</li>
+<li>使用模型对结果进行预测，然后填充</li>
+</ul>
+<h2 id="交叉-Interaction"><a href="#交叉-Interaction" class="headerlink" title="交叉(Interaction)"></a>交叉(Interaction)</h2><ul>
+<li>对数字变量之间的相互影响进行编码</li>
+<li>尝试加减乘除</li>
+<li>使用特征选择：统计测试、或者已经训练好的特征重要性</li>
+<li>忽略主观意愿和奇怪的关联能够有明显提升</li>
+</ul>
+<h2 id="高斯转换"><a href="#高斯转换" class="headerlink" title="高斯转换"></a>高斯转换</h2><ul>
+<li>一些机器学习模型假设数据是正态分布的，例如linear和logistic回归</li>
+<li>高斯分布能够帮助机器学习下模型表现得更好</li>
+<li>集中不同的转换<ul>
+<li>Logarithmic Transformation</li>
+<li>Reciprocal Transformation</li>
+<li>Square Root Transformation</li>
+<li>Exponential Transformation</li>
+<li>Boxcox Transformation</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<p>相关问题：</p>
+<p>1.为什么要做对数变换</p>
+<p><a href="https://www.zhihu.com/question/22012482" target="_blank" rel="noopener">https://www.zhihu.com/question/22012482</a></p>
+<p><a href="https://tianchi.aliyun.com/notebook-ai/detail?postId=62338" target="_blank" rel="noopener">https://tianchi.aliyun.com/notebook-ai/detail?postId=62338</a></p>
+<h2 id="异常值-Outlier"><a href="#异常值-Outlier" class="headerlink" title="异常值(Outlier)"></a>异常值(Outlier)</h2><p>1、异常点是否需要清除，需要结合具体业务</p>
+<p>2、异常点的定义</p>
+<ul>
+<li><p>高于1.5倍的第三分位数和第一分位数之差</p>
+</li>
+<li><p>与均值的差小于三倍的标准差</p>
+</li>
+</ul>
+<p>3、异常值存在的原因</p>
+<ul>
+<li>数据多样性</li>
+<li>测量错误</li>
+</ul>
+<p>4、异常点的影响</p>
+<ul>
+<li>在统计分析的时候造成多种问题</li>
+<li>对于数据均值和标准差影响比较大</li>
+</ul>
+<p>5、找出异常值</p>
+<ul>
+<li>IQR</li>
+<li>z score</li>
+<li>Scatter plots</li>
+<li>Box plot</li>
+</ul>
+<h1 id="时间特征"><a href="#时间特征" class="headerlink" title="时间特征"></a>时间特征</h1><ul>
+<li><p>日起相关特征，节假日之类</p>
+</li>
+<li><p>lag feature，根据业务决定选择lag1、lag2、。。。。</p>
+<p>检查lag函数重要性两种方法</p>
+<ul>
+<li>ACF，Autocorrelation Function</li>
+<li>PACF, Partial Autocorrelation Function</li>
+</ul>
+</li>
+<li><p>rolling windows 滑动窗口</p>
+</li>
+<li><p>Expanding windows</p>
+</li>
+</ul>
+<h1 id="空间特征"><a href="#空间特征" class="headerlink" title="空间特征"></a>空间特征</h1><ul>
+<li>欧氏距离</li>
+<li>球面距离</li>
+<li>曼哈顿距离</li>
+<li>geohash</li>
+</ul>
+<h1 id="文本特征"><a href="#文本特征" class="headerlink" title="文本特征"></a>文本特征</h1><h2 id="N-Gram"><a href="#N-Gram" class="headerlink" title="N-Gram"></a>N-Gram</h2><p>N-Gram是一种基于统计语言模型的算法。它的基本思想是将文本里面的内容按照字节进行大小为N的滑动窗口操作，形成了长度是N的字节片段序列。</p>
+<p>每一个字节片段称为gram，对所有gram的出现频度进行统计，并且按照事先设定好的阈值进行过滤，形成关键gram列表，也就是这个文本的向量特征空间，列表中的每一种gram就是一个特征向量维度。</p>
+<p>该模型基于这样一种假设，第N个词的出现只与前面N-1个词相关，而与其它任何词都不相关，整句的概率就是各个词出现概率的乘积。这些概率可以通过直接从语料中统计N个词同时出现的次数得到。常用的是二元的Bi-Gram和三元的Tri-Gram。</p>
+<h2 id="词袋模型"><a href="#词袋模型" class="headerlink" title="词袋模型"></a>词袋模型</h2><p>词袋模型可以理解为将文本拆成一个个的词语，然后用一个个词作为字典来表达文本 ，字典中的词没有特定的顺序，也舍弃了句子总体结构。其中TF-IDF是一种表示方式</p>
+<h2 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h2><p>用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度</p>
+<p>TF-IDF的核心思想是：如果某个词或短语在一篇文章中出现的频率TF高，并且在其他文章中很少出现，则认为此词或者短语具有很好的类别区分能力，适合用来分类。TF-IDF实际上是：TF*IDF。TF是词频(Term Frequency)，指的是特定词语在该文件中出现的频率。</p>
+<script type="math/tex; mode=display">
+tf_{i,j}=\frac{n_{i,j}}{\sum_{k}n_{n,j}}</script><p>其中$tf_{i,j}$表示词i出现在文章j中的次数，分母表示文章j中出现档次数量总和。</p>
+<p>IDF是逆文本频率指数(Inverse Document Frequency)。IDF的意思是在文档集D中，包含词i的数量越少，词i对于文档集越重要，此时更好区分。</p>
+<script type="math/tex; mode=display">
+idf_i=log\frac{|D|}{|{j:t_i\in d_j}|}</script><p>$|D|$表示所有文档数量，文档集中出现此$t_i$的文档数。</p>
+<h2 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h2><h2 id="Jaccard相似度"><a href="#Jaccard相似度" class="headerlink" title="Jaccard相似度"></a>Jaccard相似度</h2><p>定义：两个文档中相交的单词个数除以两个文档单词总数之和</p>
+<script type="math/tex; mode=display">
+J(d_1,d_2)=\frac{|d_1\cap d2|}{|d1 \cup d2|}</script><p>Jaccard距离</p>
+<script type="math/tex; mode=display">
+d_j(d_1,d_2)=1-J(d_1,d_2)=\frac{|d_1\cup d2| - |d_1 \cap d_2|}{|d_1\cup d_2|}</script><h2 id="编辑距离"><a href="#编辑距离" class="headerlink" title="编辑距离"></a>编辑距离</h2><p>衡量两个字符串相似度的指标，指的是两个字符串有一个字符串转成另外一个字符串需要的最少编辑操作(插入、删除、替换)次数</p>
+<p>参考资料</p>
+<p>1、<a href="https://www.kaggle.com/pavansanagapati/feature-engineering-a-comprehensive-tutorial/notebook" target="_blank" rel="noopener">https://www.kaggle.com/pavansanagapati/feature-engineering-a-comprehensive-tutorial/notebook</a></p>
+<p>2、美团机器学习实践</p>
+<p>3、<a href="https://www.jiqizhixin.com/graph/technologies/87c62b00-48b2-4e2a-8122-9876a3d3e59e" target="_blank" rel="noopener">词袋模型</a></p>
+<p>4、百面机器学习</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/特征工程/" rel="tag"># 特征工程</a>
+            
+              <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+            
+              <a href="/tags/特征选择/" rel="tag"># 特征选择</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/06/07/word-embedding作用及用法/" rel="next" title="word embedding作用及用法">
+                  <i class="fa fa-chevron-left"></i> word embedding作用及用法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类别特征"><span class="nav-number">1.</span> <span class="nav-text">类别特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#热独编码-Onehot-encoding"><span class="nav-number">1.1.</span> <span class="nav-text">热独编码(Onehot-encoding)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哈希编码-Hash-encoding"><span class="nav-number">1.2.</span> <span class="nav-text">哈希编码(Hash encoding)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计数编码-Count-encoding"><span class="nav-number">1.3.</span> <span class="nav-text">计数编码(Count encoding)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计数排名编码-LabelCount-encoding"><span class="nav-number">1.4.</span> <span class="nav-text">计数排名编码(LabelCount encoding)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Category-Embedding"><span class="nav-number">1.5.</span> <span class="nav-text">Category Embedding</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字特征"><span class="nav-number">2.</span> <span class="nav-text">数字特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#截断-Rounding"><span class="nav-number">2.1.</span> <span class="nav-text">截断(Rounding)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分桶-Binning"><span class="nav-number">2.2.</span> <span class="nav-text">分桶(Binning)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缩放-Scaling"><span class="nav-number">2.3.</span> <span class="nav-text">缩放(Scaling)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#填充-Imputation"><span class="nav-number">2.4.</span> <span class="nav-text">填充(Imputation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉-Interaction"><span class="nav-number">2.5.</span> <span class="nav-text">交叉(Interaction)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯转换"><span class="nav-number">2.6.</span> <span class="nav-text">高斯转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常值-Outlier"><span class="nav-number">2.7.</span> <span class="nav-text">异常值(Outlier)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时间特征"><span class="nav-number">3.</span> <span class="nav-text">时间特征</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#空间特征"><span class="nav-number">4.</span> <span class="nav-text">空间特征</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文本特征"><span class="nav-number">5.</span> <span class="nav-text">文本特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#N-Gram"><span class="nav-number">5.1.</span> <span class="nav-text">N-Gram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词袋模型"><span class="nav-number">5.2.</span> <span class="nav-text">词袋模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TF-IDF"><span class="nav-number">5.3.</span> <span class="nav-text">TF-IDF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#余弦相似度"><span class="nav-number">5.4.</span> <span class="nav-text">余弦相似度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jaccard相似度"><span class="nav-number">5.5.</span> <span class="nav-text">Jaccard相似度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑距离"><span class="nav-number">5.6.</span> <span class="nav-text">编辑距离</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avator.png"
+      alt="gerogegao">
+  <p class="site-author-name" itemprop="name">gerogegao</p>
+  <div class="site-description" itemprop="description">世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/geroge-gao" title="GitHub &rarr; https://github.com/geroge-gao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/gzj_1101@163.com" title="E-Mail &rarr; gzj_1101@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/xiao-gao-2/activities" title="知乎 &rarr; https://www.zhihu.com/people/xiao-gao-2/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by gerogegao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
