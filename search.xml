@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[特征工程之特征选择]]></title>
     <url>%2F2020%2F07%2F27%2F%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E4%B9%8B%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%2F</url>
-    <content type="text"></content>
+    <content type="text"><![CDATA[特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。 特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法过滤方法Filter过滤方法主要特点： 不依赖与机器学习算法 一般分为单变量和多变量 单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关特征 多变量有基于相关性和一致性的特征选择 覆盖率一般来说，会把缺失率15%-20%左右的特征丢弃掉，不过不是绝对的，也可以通过其他特征的关系或者利用模型预测对缺失值进行补齐。 1234cols = data.columns.values.tolist()missing_rate = pd.DataFrame(&#123;'column_name':cols&#125;)for c in cols: missing_rate.loc[missing_rate['column_name']==c,'missing_rate'] = data[data[c].isna()==True].shape[0]/data.shape[0] 皮尔逊相关系数]]></content>
       <categories>
         <category>机器学习</category>
       </categories>
