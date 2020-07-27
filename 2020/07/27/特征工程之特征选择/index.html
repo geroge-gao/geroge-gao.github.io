@@ -56,19 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="关于word embedding总结词向量表示词语的向量都可以称为词向量，one shot向量和distributed向量都可以表示为词向量热编码表示(one shot)优点 解决了分类器不好解决离散数据的问题， 起到了扩充特征的作用 缺点： 首先，它是一个词袋模型，不考虑词与词之间的顺序(文本中词的顺序信息非常重要) 其次假设词与词之间是独立的(大多数情况下，词与词之间是相互影响的) 最后得到的">
-<meta name="keywords" content="深度学习,NLP,词向量">
+  <meta name="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+<meta name="keywords" content="特征工程,数据挖掘,特征选择">
 <meta property="og:type" content="article">
-<meta property="og:title" content="word embedding作用及用法">
-<meta property="og:url" content="http://yoursite.com/2020/06/07/word-embedding作用及用法/index.html">
+<meta property="og:title" content="特征工程之特征选择">
+<meta property="og:url" content="http://yoursite.com/2020/07/27/特征工程之特征选择/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="关于word embedding总结词向量表示词语的向量都可以称为词向量，one shot向量和distributed向量都可以表示为词向量热编码表示(one shot)优点 解决了分类器不好解决离散数据的问题， 起到了扩充特征的作用 缺点： 首先，它是一个词袋模型，不考虑词与词之间的顺序(文本中词的顺序信息非常重要) 其次假设词与词之间是独立的(大多数情况下，词与词之间是相互影响的) 最后得到的">
+<meta property="og:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-11T13:50:02.589Z">
+<meta property="og:updated_time" content="2020-07-27T13:52:48.015Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="word embedding作用及用法">
-<meta name="twitter:description" content="关于word embedding总结词向量表示词语的向量都可以称为词向量，one shot向量和distributed向量都可以表示为词向量热编码表示(one shot)优点 解决了分类器不好解决离散数据的问题， 起到了扩充特征的作用 缺点： 首先，它是一个词袋模型，不考虑词与词之间的顺序(文本中词的顺序信息非常重要) 其次假设词与词之间是独立的(大多数情况下，词与词之间是相互影响的) 最后得到的">
-  <link rel="canonical" href="http://yoursite.com/2020/06/07/word-embedding作用及用法/">
+<meta name="twitter:title" content="特征工程之特征选择">
+<meta name="twitter:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+  <link rel="canonical" href="http://yoursite.com/2020/07/27/特征工程之特征选择/">
 
 
 <script id="page-configurations">
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title>word embedding作用及用法 | 心如止水</title>
+  <title>特征工程之特征选择 | 心如止水</title>
   
 
 
@@ -230,7 +230,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/07/word-embedding作用及用法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/27/特征工程之特征选择/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="gerogegao">
@@ -242,7 +242,7 @@
       <meta itemprop="name" content="心如止水">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">word embedding作用及用法
+        <h1 class="post-title" itemprop="name headline">特征工程之特征选择
 
           
         </h1>
@@ -258,19 +258,11 @@
                 
               
 
-              <time title="创建时间：2020-06-07 16:00:38" itemprop="dateCreated datePublished" datetime="2020-06-07T16:00:38+08:00">2020-06-07</time>
+              <time title="创建时间：2020-07-27 21:52:16 / 修改时间：21:52:48" itemprop="dateCreated datePublished" datetime="2020-07-27T21:52:16+08:00">2020-07-27</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-11 21:50:02" itemprop="dateModified" datetime="2020-06-11T21:50:02+08:00">2020-06-11</time>
-              </span>
             
           
             <span class="post-meta-item">
@@ -279,7 +271,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/深度学习/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
 
                 
                 
@@ -298,35 +290,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>关于word embedding总结</p><h2 id="词向量"><a href="#词向量" class="headerlink" title="词向量"></a>词向量</h2><p>表示词语的向量都可以称为词向量，one shot向量和distributed向量都可以表示为词向量</p><h2 id="热编码表示-one-shot"><a href="#热编码表示-one-shot" class="headerlink" title="热编码表示(one shot)"></a>热编码表示(one shot)</h2><p>优点</p><ul>
-<li>解决了分类器不好解决离散数据的问题，</li>
-<li>起到了扩充特征的作用</li>
-</ul><p>缺点：</p><ul>
-<li>首先，它是一个词袋模型，不考虑词与词之间的顺序(文本中词的顺序信息非常重要)</li>
-<li>其次假设词与词之间是独立的(大多数情况下，词与词之间是相互影响的)</li>
-<li>最后得到的特征是系数的</li>
-</ul><a id="more"></a>
-
-
-
-
-
-<h2 id="分布式表示"><a href="#分布式表示" class="headerlink" title="分布式表示"></a>分布式表示</h2><p><strong>核心思想</strong></p>
-<p>通过训练将某种语言中的每一个词映射成一个固定长度的短向量（当然这里的“短”是相对于 one-hot representation 的“长”而言的），将所有这些向量放在一起形成一个词向量空间，而每一向量则为该空间中的一个点，在这个空间上引入“距离”，则可以根据词之间的距离来判断它们之间的（词法、语义上的）相似性了。</p>
-<h3 id="基于矩阵的分布表示"><a href="#基于矩阵的分布表示" class="headerlink" title="基于矩阵的分布表示"></a>基于矩阵的分布表示</h3><h3 id="基于聚类的分布表示"><a href="#基于聚类的分布表示" class="headerlink" title="基于聚类的分布表示"></a>基于聚类的分布表示</h3><h3 id="基于神经网络的分布表示"><a href="#基于神经网络的分布表示" class="headerlink" title="基于神经网络的分布表示"></a>基于神经网络的分布表示</h3><p>1、基本概念</p>
-<p>基于神经网络的分布表示一般称为word embedding(词嵌入)或者distributed representation</p>
-<p>2、word2vec</p>
-<p>两种方式</p>
-<p>CBOW:输入一个词上下文，输出这个词</p>
-<p>Skip-Gram：输入一个词输出这个词的上下文</p>
-<p>embedding layer：和word2vec一样</p>
-<h2 id="embedding-layer和word2vec"><a href="#embedding-layer和word2vec" class="headerlink" title="embedding layer和word2vec"></a>embedding layer和word2vec</h2><ul>
-<li></li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>1、<a href="https://blog.csdn.net/scotfield_msn/article/details/69075227" target="_blank" rel="noopener">DeepNLP的表示学习·词嵌入来龙去脉·深度学习（Deep Learning）·自然语言处理（NLP）·表示（Representation）</a></p>
-<p>2、<a href="https://www.cnblogs.com/peghoty/p/3857839.html" target="_blank" rel="noopener">word2vec 中的数学原理详解</a></p>
-<p>3、<a href="https://zhuanlan.zhihu.com/p/26306795" target="_blank" rel="noopener">秒懂词向量本质</a></p>
-
+        
     </div>
 
     
@@ -358,11 +322,11 @@
           
           <div class="post-tags">
             
-              <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+              <a href="/tags/特征工程/" rel="tag"># 特征工程</a>
             
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
             
-              <a href="/tags/词向量/" rel="tag"># 词向量</a>
+              <a href="/tags/特征选择/" rel="tag"># 特征选择</a>
             
           </div>
         
@@ -372,8 +336,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2020/03/10/xgboost和lightGBM/" rel="next" title="lightGBM论文总结">
-                  <i class="fa fa-chevron-left"></i> lightGBM论文总结
+                <a href="/2020/07/11/特征工程之特征构建/" rel="next" title="特征工程之特征构建">
+                  <i class="fa fa-chevron-left"></i> 特征工程之特征构建
                 </a>
               
             </div>
@@ -381,10 +345,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2020/07/11/特征工程之特征构建/" rel="prev" title="特征工程之特征构建">
-                  特征工程之特征构建 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -433,8 +393,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#词向量"><span class="nav-number">1.</span> <span class="nav-text">词向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热编码表示-one-shot"><span class="nav-number">2.</span> <span class="nav-text">热编码表示(one shot)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式表示"><span class="nav-number">3.</span> <span class="nav-text">分布式表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于矩阵的分布表示"><span class="nav-number">3.1.</span> <span class="nav-text">基于矩阵的分布表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于聚类的分布表示"><span class="nav-number">3.2.</span> <span class="nav-text">基于聚类的分布表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于神经网络的分布表示"><span class="nav-number">3.3.</span> <span class="nav-text">基于神经网络的分布表示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#embedding-layer和word2vec"><span class="nav-number">4.</span> <span class="nav-text">embedding layer和word2vec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
@@ -606,6 +564,56 @@
 
   
 
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
   
 
   
