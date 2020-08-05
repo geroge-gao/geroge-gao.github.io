@@ -56,20 +56,20 @@
   };
 </script>
 
-  <meta name="description" content="​    title: 特征工程之特征构建date: 2020-07-11 22:00:53tags: [数据挖掘,特征工程,特征构造]categories:  机器学习mathjax: true 特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。">
+  <meta name="description" content="​    特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。 特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法过滤方法Filter过滤方法主要特点： 不依赖与机器学习算法 一般分为单变量和多变量 单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关">
 <meta name="keywords" content="特征工程,数据挖掘,特征选择">
 <meta property="og:type" content="article">
 <meta property="og:title" content="特征工程之特征选择">
 <meta property="og:url" content="http://yoursite.com/2020/08/05/特征工程之特征选择/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="​    title: 特征工程之特征构建date: 2020-07-11 22:00:53tags: [数据挖掘,特征工程,特征构造]categories:  机器学习mathjax: true 特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。">
+<meta property="og:description" content="​    特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。 特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法过滤方法Filter过滤方法主要特点： 不依赖与机器学习算法 一般分为单变量和多变量 单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/特征选择/捕获.PNG">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmu%3D0%2C%5Csigma%3D1">
-<meta property="og:updated_time" content="2020-08-05T07:46:06.666Z">
+<meta property="og:updated_time" content="2020-08-05T07:48:55.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="特征工程之特征选择">
-<meta name="twitter:description" content="​    title: 特征工程之特征构建date: 2020-07-11 22:00:53tags: [数据挖掘,特征工程,特征构造]categories:  机器学习mathjax: true 特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。">
+<meta name="twitter:description" content="​    特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的 简化模型，增加可解释性 改善性能，并且节省存储空间和计算开销 改善通用性，降低过拟合风险。 特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法过滤方法Filter过滤方法主要特点： 不依赖与机器学习算法 一般分为单变量和多变量 单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/geroge-gao/Images/master/特征选择/捕获.PNG">
   <link rel="canonical" href="http://yoursite.com/2020/08/05/特征工程之特征选择/">
 
@@ -261,7 +261,7 @@
                 
               
 
-              <time title="创建时间：2020-08-05 15:43:10 / 修改时间：15:46:06" itemprop="dateCreated datePublished" datetime="2020-08-05T15:43:10+08:00">2020-08-05</time>
+              <time title="创建时间：2020-08-05 15:43:10 / 修改时间：15:48:55" itemprop="dateCreated datePublished" datetime="2020-08-05T15:43:10+08:00">2020-08-05</time>
             </span>
           
             
@@ -293,26 +293,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>​    </p><p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/特征选择/捕获.PNG" alt></p><p>title: 特征工程之特征构建<br>date: 2020-07-11 22:00:53<br>tags: [数据挖掘,特征工程,特征构造]<br>categories: </p><ul>
-<li>机器学习<br>mathjax: true</li>
-</ul><p>特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的</p><ul>
+        <p>​    </p><p><img src="https://raw.githubusercontent.com/geroge-gao/Images/master/特征选择/捕获.PNG" alt></p><p>特征选择，即对于生成的特征集合进行筛选，得到一个子集，主要有一下三个目的</p><ul>
 <li>简化模型，增加可解释性</li>
 <li>改善性能，并且节省存储空间和计算开销</li>
 <li>改善通用性，降低过拟合风险。</li>
+</ul><p>特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法</p><h1 id="过滤方法Filter"><a href="#过滤方法Filter" class="headerlink" title="过滤方法Filter"></a>过滤方法Filter</h1><p>过滤方法主要特点：</p><ul>
+<li>不依赖与机器学习算法</li>
+<li>一般分为单变量和多变量</li>
+<li>单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关特征</li>
+<li>多变量有基于相关性和一致性的特征选择</li>
 </ul><a id="more"></a>
 
 
 
 
 
-<p>特征选择主要分为三种方法，过滤方法、封账方法和嵌入方法</p>
-<h1 id="过滤方法Filter"><a href="#过滤方法Filter" class="headerlink" title="过滤方法Filter"></a>过滤方法Filter</h1><p>过滤方法主要特点：</p>
-<ul>
-<li>不依赖与机器学习算法</li>
-<li>一般分为单变量和多变量</li>
-<li>单变量一般基于特征变量与目标变量之间的相关性或互信息，根据相关性排序，过滤掉最不相关特征</li>
-<li>多变量有基于相关性和一致性的特征选择</li>
-</ul>
+
 <h2 id="单变量"><a href="#单变量" class="headerlink" title="单变量"></a>单变量</h2><h3 id="覆盖率"><a href="#覆盖率" class="headerlink" title="覆盖率"></a>覆盖率</h3><p>一般来说，会把缺失率15%-20%左右的特征丢弃掉，不过不是绝对的，也可以通过其他特征的关系或者利用模型预测对缺失值进行补齐。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cols = data.columns.values.tolist()</span><br><span class="line">missing_rate = pd.DataFrame(&#123;<span class="string">'column_name'</span>:cols&#125;)</span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> cols:</span><br><span class="line">    missing_rate.loc[missing_rate[<span class="string">'column_name'</span>]==c,<span class="string">'missing_rate'</span>] = data[data[c].isna()==<span class="literal">True</span>].shape[<span class="number">0</span>]/data.shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 <h3 id="皮尔逊相关系数"><a href="#皮尔逊相关系数" class="headerlink" title="皮尔逊相关系数"></a>皮尔逊相关系数</h3><p>皮尔逊相关性系数用于度量两个变量$X$和$Y$的线性相关性，计算公式为</p>
