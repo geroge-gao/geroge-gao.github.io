@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="心如止水" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":2,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="传统模型协同过滤1、User-CF的缺点 一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度 用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用 2、User-CF和Item-CF的使用场景 User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点 Item-CF适用于兴趣变化比">
+<meta name="keywords" content="推荐系统,阅读笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习推荐系统阅读笔记(一)">
+<meta property="og:url" content="http://yoursite.com/2020/08/24/深度学习推荐系统阅读笔记-一/index.html">
+<meta property="og:site_name" content="心如止水">
+<meta property="og:description" content="传统模型协同过滤1、User-CF的缺点 一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度 用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用 2、User-CF和Item-CF的使用场景 User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点 Item-CF适用于兴趣变化比">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-08-24T15:35:01.013Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习推荐系统阅读笔记(一)">
+<meta name="twitter:description" content="传统模型协同过滤1、User-CF的缺点 一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度 用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用 2、User-CF和Item-CF的使用场景 User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点 Item-CF适用于兴趣变化比">
+  <link rel="canonical" href="http://yoursite.com/2020/08/24/深度学习推荐系统阅读笔记-一/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>深度学习推荐系统阅读笔记(一) | 心如止水</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">心如止水</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/24/深度学习推荐系统阅读笔记-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gerogegao">
+      <meta itemprop="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+      <meta itemprop="image" content="/images/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="心如止水">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">深度学习推荐系统阅读笔记(一)
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-24 23:33:22 / 修改时间：23:35:01" itemprop="dateCreated datePublished" datetime="2020-08-24T23:33:22+08:00">2020-08-24</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/推荐系统/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="传统模型"><a href="#传统模型" class="headerlink" title="传统模型"></a>传统模型</h1><h2 id="协同过滤"><a href="#协同过滤" class="headerlink" title="协同过滤"></a>协同过滤</h2><p>1、User-CF的缺点</p><ul>
+<li>一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度</li>
+<li>用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用</li>
+</ul><p>2、User-CF和Item-CF的使用场景</p><ul>
+<li>User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点</li>
+<li>Item-CF适用于兴趣变化比较稳定的应用，比如电商和视频推荐场景</li>
+</ul><a id="more"></a>
+
+
+
+<p>协同过滤存在天然缺陷，头部效应明显，处理稀疏向量的能力较弱。并且协同过滤仅仅利用了用户年龄、性别、商品描述、商品分类等信息，会造成有效信息遗漏。</p>
+<h2 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a>矩阵分解</h2><p>矩阵分解，针对协同过滤算法头部效应明显，泛化能力弱，加入了隐向量</p>
+<p>矩阵分解优点：</p>
+<ul>
+<li>泛化能力强</li>
+<li>空间复杂度低，只需要存储用户和物品隐向量</li>
+<li>更好的扩张性和灵活性，可以和其他特征拼接</li>
+</ul>
+<p>缺点：</p>
+<p>和协同过滤一样，无法利用用户年龄性别等信息</p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>将推荐问题转换成CTR问题</p>
+<p>优点：</p>
+<ul>
+<li>数学上的支撑</li>
+<li>可解释性强</li>
+<li>符合人类对预估过程的直觉认识</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>表达能力不强，无法进行特征交叉，导致信息丢失</li>
+</ul>
+<h2 id="FM与FFM"><a href="#FM与FFM" class="headerlink" title="FM与FFM"></a>FM与FFM</h2><p>辛普森悖论：在分组中占优势的一方在总评中不占优势。</p>
+<h3 id="POLY2"><a href="#POLY2" class="headerlink" title="POLY2"></a>POLY2</h3><p>暴力交叉特征，对所有特征进行两两组合，数学形式：</p>
+<script type="math/tex; mode=display">
+\Phi POLY2(w,x)=\sum_{j_1=1}^n\sum_{j_2=j_1+1}^nw_h(j_1,j_2)x_{j_1}x_{j_2}</script><p>$x_i$和$x_j$表示特征$i,j$，$w_h(i,j)$表示特征的权重赋值，本质任是线性模型。</p>
+<p>有点：</p>
+<p>本质任然是线性模型，便于工程兼容</p>
+<p>缺点：</p>
+<ul>
+<li>采用one-shot编码，处理类别特征是会导致特征极度稀疏，并且无法选择特征交叉，导致部分稀疏特征更加稀疏，无法收敛</li>
+<li>参数上升了，量级从$n$上升至$n^2$。</li>
+</ul>
+<h3 id="FM"><a href="#FM" class="headerlink" title="FM"></a>FM</h3><p>数学形式：</p>
+<script type="math/tex; mode=display">
+FM(w,x)=\sum_{j_1=1}^n\sum_{j_2=j_1+1}^n(w_{j_1}\cdot w_{j_2})x_{j_1}x_{j_2}</script><p>$w$为$(1,k)$维向量。</p>
+<p>优点：</p>
+<ul>
+<li>引入隐向量使FM有效解决数据稀疏性问题，将权重模型减少到了$n*k$</li>
+<li>可以使用梯度下降学习，不失灵活性和</li>
+</ul>
+<h2 id="FFM"><a href="#FFM" class="headerlink" title="FFM"></a>FFM</h2><p>相对于FM，引入了特征感知域的概念，使得模型的表达能力更强</p>
+<script type="math/tex; mode=display">
+FFM(w,x)=\sum_{j_1=1}^n\sum_{j_2=j_1+1}^n(w_{j_1,f_2}\cdot w_{j_2,f_1})x_{j_1}x_{j_2}</script><p>FFM和FM的区别在于隐向量由原来的$w_{j_1}$变成了$w_{j_1,f_2}$，意味着每个特征对应着不是唯一的隐向量，而是一个隐向量组。吧</p>
+<h2 id="GBDT-LR"><a href="#GBDT-LR" class="headerlink" title="GBDT+LR"></a>GBDT+LR</h2><p>自动化特征的开端</p>
+<p>1、GBDT进行特征转换</p>
+<ul>
+<li>将样本输入一个子树之后，回落到一个叶子结点中，将该节点置为1，其他结点置为0，然后将所有结点进行拼接，就得到一个特征向量</li>
+<li>决策树的深度决定交叉特征的的阶数，决策树深度为4，经过3次分裂，交叉特征为3阶</li>
+</ul>
+<p>传统特征工程：</p>
+<ul>
+<li>进行人工或者半人工的特征组合和筛选</li>
+<li>改造目标函数，改进模型结构，提升特征交叉的方式增强特征组合</li>
+</ul>
+<p>弊端：</p>
+<ul>
+<li>对算法工程师经验和经历投入要求太高了</li>
+<li>从根本上改变模型结构，对模型设计能力要求太高</li>
+</ul>
+<p>GBDT+LR的优点：<br>特征工程由独立模型完成，实现端到端的训练。</p>
+<h1 id="深度学习模型"><a href="#深度学习模型" class="headerlink" title="深度学习模型"></a>深度学习模型</h1><p>深度学习模型优点：</p>
+<p>1、表达能力更强，能够挖掘出更多的数据中潜藏的模式。</p>
+<p>2、模型结构灵活，能够根据业务场景和数据特点灵活调整模型结构。</p>
+<p>深度学习模型的几个发展方向</p>
+<ul>
+<li>改变神经网络复杂度</li>
+<li>改变特征交叉的方式</li>
+<li>组合模型</li>
+<li>FM模型的学习演化版本</li>
+<li>注意力机制和推荐模型的结合</li>
+<li>序列模型与推荐系统的结合</li>
+<li>强化模型与推荐系统的结合</li>
+</ul>
+<h2 id="AutoRec"><a href="#AutoRec" class="headerlink" title="AutoRec"></a>AutoRec</h2><p>  浅层神经网络，对于协同过滤，存在$m\times n$的共现矩阵，相当于神经网络中的权重$w$，使用单层神经网络具有一定的泛化能力，但是结构较简单，泛化能力存在不足。</p>
+<h2 id="Deep-Crossing"><a href="#Deep-Crossing" class="headerlink" title="Deep Crossing"></a>Deep Crossing</h2><p>微软搜索引擎中的搜索广告推荐场景。</p>
+<p> Deep Crossing需要解决的三个问题</p>
+<p>1、离散类特征过于稀疏，不利于直接输入神经网络进行训练，如何解决稀疏特征稠密化？</p>
+<p>引入embedding层，将稀疏特征稠密化</p>
+<p>2、如何解决特征自动交叉问题？</p>
+<p>引入残差网络结构，<font color="red">通过多层残差对各个维度进行交叉</font>&gt;。</p>
+<p>3、如何在输出层达成问题设定的优化目标？</p>
+<p>引入Scoring层，对于CTR二分类问题，采用逻辑回归模型，对于图像类多分类问题，采用softmax模型。</p>
+<p>优点：</p>
+<p>没有采用任何人工特征的参与。</p>
+<h2 id="NeuralCF"><a href="#NeuralCF" class="headerlink" title="NeuralCF"></a>NeuralCF</h2><p>NeuralCF采用多元神经网络+输出层结构代替了矩阵分解模型中简单內积操作，目的是：</p>
+<ul>
+<li>让用户向量和物品向量充分交叉，得到价值更多的特征组合信息</li>
+<li>引入更多非线性特征，让模型表达能力更强</li>
+</ul>
+<p>优势：</p>
+<p>利用神经网络的优势，可灵活组合不同的特征，按需增加或减少模型复杂度</p>
+<p>缺点：</p>
+<p>由于基于协同过滤的思想，没有引入其他类别特征。</p>
+<h2 id="PNN"><a href="#PNN" class="headerlink" title="PNN"></a>PNN</h2><p>相对于Deep Cross，将stacking层换成了Product Layer，乘积层，里面既有内集，也有外集。</p>
+<p>优点：</p>
+<p>对于Embedding向量多样化交叉，定义了內积和外积操作</p>
+<p>缺点：</p>
+<p>特征进行了无差别交叉，一定程度的忽略了原始特征向量中包含的价值信息。</p>
+<h2 id="Wide-amp-Deep"><a href="#Wide-amp-Deep" class="headerlink" title="Wide&amp;Deep"></a>Wide&amp;Deep</h2><p>Wide&amp;Deep设计的初衷和最大价值在于同时具有较强的记忆能力和泛化能力</p>
+<p>记忆能力：模型直接学习并且利用历史数据中的物品和特征共现能力，例如协同过滤，可以通过历史数据计算物品和用户共现矩阵，进而通过历史数据进行推荐。</p>
+<p>泛化能力：模型的传递特征的相关性，发觉稀疏甚至从未出现过的稀有特征和最终标签相关性能力。</p>
+<p>Deep部分输入的是全量的特征，数值型和类别特征的embedding向量通过全连接层连接在一起。</p>
+<p>Wide部分仅输入已安装应用和曝光应用两类特征，已安装应用表示用户历史行为，曝光应用代表当前待推荐的应用，选择这两类特征的原因是充分发挥wide的记忆能力强的有点。</p>
+<p>Wide&amp;Deep模型的优点：</p>
+<p>（1）抓住业务本质特点，融合传统模型的记忆能力和深度模型的泛化能力</p>
+<p>（2）模型结构不复杂，容易工程化实现</p>
+<p>缺点：</p>
+<p>Wide部分任需要人工筛选特征</p>
+<h2 id="Wide-amp-Cross"><a href="#Wide-amp-Cross" class="headerlink" title="Wide&amp;Cross"></a>Wide&amp;Cross</h2><p>使用Cross网络替代原来的wide部分。设计Cross网络的目的是为了增加特征之间的交互力度，使用多层交叉层对输入向量进行特征交叉。减少人工特征。</p>
+<p>假设$l$层交叉层的输出向量为$x_l$，那么$l+1$层的向量输出为:</p>
+<script type="math/tex; mode=display">
+x_{l+1}=x_0x_l^TW_l+b_l+x_l</script><p>每层均保留了输入向量，因此在输入向量和输出向量之间的差别不是特别大。</p>
+<p>优点：可以自动进行交叉特征，避免了很多基于业务理解的人工特征。</p>
+<p>缺点：Cross部分网络复杂度较高。</p>
+<h2 id="FM系列"><a href="#FM系列" class="headerlink" title="FM系列"></a>FM系列</h2><h3 id="FNN"><a href="#FNN" class="headerlink" title="FNN"></a>FNN</h3><p>为了解决Embedding训练速度慢的问题，FNN采用的思路是用FM模型训练好的个特征隐向量初始化Embedding层参数，有点类似预训练。FM的计算公式：</p>
+<script type="math/tex; mode=display">
+y_{FM}=sigmod(w_0+\sum_{i=1}^Nw_ix_i+\sum_{i=1}^N\sum_{j=i+1}^N<v_i,v_j>x_ix_j</script><p>优点：利用FM初始化Embedding层参数，加快训练</p>
+<p>缺点：结构比较简单，没有针对性的特征交叉层</p>
+<h3 id="DeepFM"><a href="#DeepFM" class="headerlink" title="DeepFM"></a>DeepFM</h3><p>采用FM优化Wide&amp;Deep模型中Wide模块，主要针对Wide部分不具备自动组合特征的能力的缺陷进行改善的。利用FM替换了原来的Wide部分，加强了浅层网络部分特征组合的能力。左边FM与右边神经网络共享相同的embedding层。FM对不同特征域两两交叉。也就是将embedding层当做原FM中隐向量。</p>
+<h3 id="NFM"><a href="#NFM" class="headerlink" title="NFM"></a>NFM</h3><p>NFM的思想，利用神经网络改进FM，主要思路是利用一个表达能力更强的函数替代原FM</p>
+<script type="math/tex; mode=display">
+\hat y_{FM}(x)=w_0+\sum_{i=1}^Nw_ix_i+\sum_{i=1}^N\sum_{j=i+1}^Nv_i^Tv_j\cdot x_ix_j</script><script type="math/tex; mode=display">
+\hat y_{MFM}(x)=w_0+\sum_{i=1}^Nw_ix_i+f(x)</script><p>主要有5各模块</p>
+<ul>
+<li>原始稀疏特征向量</li>
+<li>Embedding层</li>
+<li>特征交叉池化层</li>
+<li>隐层</li>
+<li>预测层</li>
+</ul>
+<p>其实就是在Embedding层和多层神经网络之间增加了特征交叉池化层，具体操作如下：</p>
+<script type="math/tex; mode=display">
+f_{BI}(V_x)=\sum_{i=1}^n\sum_{j=i+1}^n(x_iv_i)\odot (x_jv_j)</script><p>$\odot$表示两个向量的元素积操作</p>
+<script type="math/tex; mode=display">
+(v_i\odot v_j)_k=v_{ik}v_{j_k}</script><p>基于FM的深度学习模型的有点和局限性</p>
+<p>优点：</p>
+<ul>
+<li>让模型具备非常强的非线性表达能力</li>
+</ul>
+<p>局限：</p>
+<ul>
+<li>进行了大量基于不同特征交互操作思路的尝试，特征工程的思路已经穷尽了。</li>
+</ul>
+<h2 id="AFM"><a href="#AFM" class="headerlink" title="AFM"></a>AFM</h2><p>在NFM模型中，对于不同的特征一视同仁，但是实际上不同的特征对于业务的影响是不一致的，因此AFM通过在NFM的特征交叉层和最终输出层加上注意力机制实现，AFM的特征交叉过程同样采用元素积操作</p>
+<script type="math/tex; mode=display">
+f_{PI}(\delta) =\{(v\odot v_j)x_ix_j\}_{(i,j)\in R_{x}}</script><p>AMF加入注意力得分之后的池化过程</p>
+<script type="math/tex; mode=display">
+f_{Att}(f_{PI}(\delta))=\sum_{(i,j)\R_x}a_{i,j}(v_i\odot v_j)x_ix_j</script><p>为了防止交叉特征数据稀疏问题带来的权重难以收敛，AFM在交叉层和池化层之间的注意力网络来生成注意力得分</p>
+<h2 id="DIN"><a href="#DIN" class="headerlink" title="DIN"></a>DIN</h2><p>应用场景： 阿里巴巴电商广告推荐</p>
+<p>DIN模型是在深度学习网络中加入了注意力机制，利用候选商品和历史行为相关性计算出一个权重，这个权重代表注意力的强弱。例如，广告中的商品是键盘，用户点击商品序列有几个不同的商品id，分别为鼠标、T恤和洗面奶。因此鼠标这个历史行为的商品id对于预测键盘广告的点击率重要程度大于后两者。</p>
+<p>注意力形式化表达：</p>
+<script type="math/tex; mode=display">
+V_u=f(V_a)=\sum_{i=1}^Nw_i\cdot V_i = \sum_{i=1}^Ng(V_i,V_a)\cdot V_i</script><p>$V_u$是用户Embedding向量，$V_a$是候选广告商品Embedding向量，$V_i$是用户$u$第$i$次行为Embedding向量。用户行为指的是游览的商品和店铺。$w_i$由$V_i$和$V_a$的关系决定，即$w_i=g(V_i,V_a)$, g函数采用的是注意力激活单元。</p>
+<p>优点：</p>
+<ul>
+<li>在传统深度学习推荐系统模型基础上，引入了注意力机制，并利用用户历史行为和目标广告商品的相关性计算注意力得分</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>没有充分利用历史行为以外的其他特征。</li>
+</ul>
+<h2 id="DIEN"><a href="#DIEN" class="headerlink" title="DIEN"></a>DIEN</h2><p>相比DIN，考虑到了时序信息，用户的兴趣也是随着时间变化的，因此时序信息能够</p>
+<p>1、加强最近行为对下一次购买的预测影响</p>
+<p>2、序列模型能够学习到购买趋势</p>
+<p>网络结构还是输入层+Embedding层+连接层+多层全连接层+输出层</p>
+<p>DIEN的创新点在于构建了一个兴趣进化网络。</p>
+<p>兴趣进化网络分三层：</p>
+<p>1、行为序列层：将原始的ID行为序列转换成Embedding行为序列</p>
+<p>2、兴趣抽取层：通过模拟用户兴趣迁移过程，抽取用户兴趣。采用GRU，相对于LSTM参数更少</p>
+<p>3、兴趣进化层：通过在兴趣层基础上加上注意力机制，模拟兴趣的进化过程。结构为AUGRU，在院GRU的更新门的结构上加上了注意力得分。</p>
+<p>优点：</p>
+<ul>
+<li>考虑到了时序信息</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>序列模型训练起来比较复杂</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="gerogegao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/推荐系统/" rel="tag"># 推荐系统</a>
+            
+              <a href="/tags/阅读笔记/" rel="tag"># 阅读笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/08/05/特征工程之特征选择/" rel="next" title="特征工程之特征选择">
+                  <i class="fa fa-chevron-left"></i> 特征工程之特征选择
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#传统模型"><span class="nav-number">1.</span> <span class="nav-text">传统模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#协同过滤"><span class="nav-number">1.1.</span> <span class="nav-text">协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵分解"><span class="nav-number">1.2.</span> <span class="nav-text">矩阵分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑回归"><span class="nav-number">1.3.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FM与FFM"><span class="nav-number">1.4.</span> <span class="nav-text">FM与FFM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#POLY2"><span class="nav-number">1.4.1.</span> <span class="nav-text">POLY2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FM"><span class="nav-number">1.4.2.</span> <span class="nav-text">FM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FFM"><span class="nav-number">1.5.</span> <span class="nav-text">FFM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT-LR"><span class="nav-number">1.6.</span> <span class="nav-text">GBDT+LR</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深度学习模型"><span class="nav-number">2.</span> <span class="nav-text">深度学习模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoRec"><span class="nav-number">2.1.</span> <span class="nav-text">AutoRec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Crossing"><span class="nav-number">2.2.</span> <span class="nav-text">Deep Crossing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NeuralCF"><span class="nav-number">2.3.</span> <span class="nav-text">NeuralCF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PNN"><span class="nav-number">2.4.</span> <span class="nav-text">PNN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wide-amp-Deep"><span class="nav-number">2.5.</span> <span class="nav-text">Wide&amp;Deep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wide-amp-Cross"><span class="nav-number">2.6.</span> <span class="nav-text">Wide&amp;Cross</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FM系列"><span class="nav-number">2.7.</span> <span class="nav-text">FM系列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FNN"><span class="nav-number">2.7.1.</span> <span class="nav-text">FNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DeepFM"><span class="nav-number">2.7.2.</span> <span class="nav-text">DeepFM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NFM"><span class="nav-number">2.7.3.</span> <span class="nav-text">NFM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AFM"><span class="nav-number">2.8.</span> <span class="nav-text">AFM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DIN"><span class="nav-number">2.9.</span> <span class="nav-text">DIN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DIEN"><span class="nav-number">2.10.</span> <span class="nav-text">DIEN</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avator.png"
+      alt="gerogegao">
+  <p class="site-author-name" itemprop="name">gerogegao</p>
+  <div class="site-description" itemprop="description">世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/geroge-gao" title="GitHub &rarr; https://github.com/geroge-gao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/gzj_1101@163.com" title="E-Mail &rarr; gzj_1101@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/xiao-gao-2/activities" title="知乎 &rarr; https://www.zhihu.com/people/xiao-gao-2/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by gerogegao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>
