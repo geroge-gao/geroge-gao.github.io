@@ -56,18 +56,18 @@
   };
 </script>
 
-  <meta name="description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
-<meta name="keywords" content="推荐系统,Embedding">
+  <meta name="description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
+<meta name="keywords" content="推荐系统,Embedding,阅读笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《深度学习推荐系统》阅读笔记(2)">
 <meta property="og:url" content="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+<meta property="og:description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-25T17:03:08.571Z">
+<meta property="og:updated_time" content="2020-08-26T16:01:32.946Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《深度学习推荐系统》阅读笔记(2)">
-<meta name="twitter:description" content="世界上只有一种英雄主义,就是看清生活的真相之后依然热爱生活。">
+<meta name="twitter:description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
   <link rel="canonical" href="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/">
 
 
@@ -258,11 +258,19 @@
                 
               
 
-              <time title="创建时间：2020-08-26 00:59:36 / 修改时间：01:03:08" itemprop="dateCreated datePublished" datetime="2020-08-26T00:59:36+08:00">2020-08-26</time>
+              <time title="创建时间：2020-08-26 00:59:36" itemprop="dateCreated datePublished" datetime="2020-08-26T00:59:36+08:00">2020-08-26</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-27 00:01:32" itemprop="dateModified" datetime="2020-08-27T00:01:32+08:00">2020-08-27</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -297,7 +305,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h1 id="Embedding作用"><a href="#Embedding作用" class="headerlink" title="Embedding作用"></a>Embedding作用</h1><p>Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。</p><p>Embedding是深度学习的基础核心操作，主要有一下三个原因</p><p>1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据</p><p>2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。</p><a id="more"></a>
+
+
+
+<p>3、Embedding对物品、用户的相似度计算是常用的推荐系统召回技术。</p>
+<h1 id="Word2Vec和Item2Vec"><a href="#Word2Vec和Item2Vec" class="headerlink" title="Word2Vec和Item2Vec"></a>Word2Vec和Item2Vec</h1><p>Word2vec主要用于计算词向量相似度，Item2Vec是Word2Vec在推荐上面的应用，只是两者优化目标不同。并且Item2Vec使用的物品序列是由用户历史行为产生的物品序列。</p>
+<p>假设Word2Vec中有一个长为$T$的句子为$w_1,w_2,…,w_T$,其优化的目标为</p>
+<script type="math/tex; mode=display">
+\frac{1}{T}\sum_{t=1}^T\sum_{-c\le j\le c,j\ne0}\log p(w_{t+j}|w_t)</script><p>而对于Item2Vec，w表示历史记录，其优化目标为:</p>
+<script type="math/tex; mode=display">
+\frac{1}{K}\sum_{i=1}^K\sum_{j\ne i}^K\log p(w_j|w_i)</script><p>Item2Vec摒弃了时间窗口，认为任意两个物品都是相关的，而不仅仅是时间窗口之类的物品对数和。</p>
+<p>缺点：只能利用序列型数据，对网络化数据捉襟见肘</p>
+<h1 id="Graph-Embedding"><a href="#Graph-Embedding" class="headerlink" title="Graph Embedding"></a>Graph Embedding</h1><p>Graph Embedding是一种对图结构中的结点进行Embedding编码的方法。</p>
+<h2 id="DeepWalk"><a href="#DeepWalk" class="headerlink" title="DeepWalk"></a>DeepWalk</h2><p>主要思想是在由物品组成的图上随机游走，产生大量物品序列，然后将这些序列利用Word2Vec进行训练，得到物品的Embedding向量。</p>
+<p>DeepWalk算法流程</p>
+<p>1、基于用户行为构建关系图，例如用户先买A再买B，就会产生A到B的有向边，一次类推，将用户行为构建成物品关系图。</p>
+<p>2、采用随机游走算法选择起始点，重新产生物品序列。</p>
+<p>3、将产生序列输入到Word2Vec模型中</p>
+<p>在DeepWalk算法流程中，唯一需要形式化定义的就是随机游走的跳转概率。假设遍历到节点$v_i$，那么跳转到其邻节点的概率是$v_j$的概率为：</p>
+<script type="math/tex; mode=display">
+P(v_j|v_i)=\begin{cases} 
+\frac{M_{ij}}{\sum_{j\in N_+(v_i) M_{ij}}},  & v_j\in N_+(v_i) \\
+0, & e_{ij}\notin \varepsilon
+\end{cases}</script><p>其中$M_{ij}$是节点$v_i$到$v_j$的边的权重。</p>
+<p>优点：简单</p>
+<p>缺点：随机游走抽样性不强</p>
+<h2 id="Node2vec"><a href="#Node2vec" class="headerlink" title="Node2vec"></a>Node2vec</h2>
     </div>
 
     
@@ -332,6 +366,8 @@
               <a href="/tags/推荐系统/" rel="tag"># 推荐系统</a>
             
               <a href="/tags/Embedding/" rel="tag"># Embedding</a>
+            
+              <a href="/tags/阅读笔记/" rel="tag"># 阅读笔记</a>
             
           </div>
         
@@ -398,6 +434,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Embedding作用"><span class="nav-number">1.</span> <span class="nav-text">Embedding作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word2Vec和Item2Vec"><span class="nav-number">2.</span> <span class="nav-text">Word2Vec和Item2Vec</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graph-Embedding"><span class="nav-number">3.</span> <span class="nav-text">Graph Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DeepWalk"><span class="nav-number">3.1.</span> <span class="nav-text">DeepWalk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node2vec"><span class="nav-number">3.2.</span> <span class="nav-text">Node2vec</span></a></li></ol></li></ol></div>
+        
       </div>
       <!--/noindex-->
 

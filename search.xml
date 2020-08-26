@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[《深度学习推荐系统》阅读笔记(2)]]></title>
     <url>%2F2020%2F08%2F26%2F%E3%80%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-2%2F</url>
-    <content type="text"></content>
+    <content type="text"><![CDATA[Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。 3、Embedding对物品、用户的相似度计算是常用的推荐系统召回技术。 Word2Vec和Item2VecWord2vec主要用于计算词向量相似度，Item2Vec是Word2Vec在推荐上面的应用，只是两者优化目标不同。并且Item2Vec使用的物品序列是由用户历史行为产生的物品序列。 假设Word2Vec中有一个长为$T$的句子为$w_1,w_2,…,w_T$,其优化的目标为 \frac{1}{T}\sum_{t=1}^T\sum_{-c\le j\le c,j\ne0}\log p(w_{t+j}|w_t)而对于Item2Vec，w表示历史记录，其优化目标为: \frac{1}{K}\sum_{i=1}^K\sum_{j\ne i}^K\log p(w_j|w_i)Item2Vec摒弃了时间窗口，认为任意两个物品都是相关的，而不仅仅是时间窗口之类的物品对数和。 缺点：只能利用序列型数据，对网络化数据捉襟见肘 Graph EmbeddingGraph Embedding是一种对图结构中的结点进行Embedding编码的方法。 DeepWalk主要思想是在由物品组成的图上随机游走，产生大量物品序列，然后将这些序列利用Word2Vec进行训练，得到物品的Embedding向量。 DeepWalk算法流程 1、基于用户行为构建关系图，例如用户先买A再买B，就会产生A到B的有向边，一次类推，将用户行为构建成物品关系图。 2、采用随机游走算法选择起始点，重新产生物品序列。 3、将产生序列输入到Word2Vec模型中 在DeepWalk算法流程中，唯一需要形式化定义的就是随机游走的跳转概率。假设遍历到节点$v_i$，那么跳转到其邻节点的概率是$v_j$的概率为： P(v_j|v_i)=\begin{cases} \frac{M_{ij}}{\sum_{j\in N_+(v_i) M_{ij}}}, & v_j\in N_+(v_i) \\ 0, & e_{ij}\notin \varepsilon \end{cases}其中$M_{ij}$是节点$v_i$到$v_j$的边的权重。 优点：简单 缺点：随机游走抽样性不强 Node2vec]]></content>
       <categories>
         <category>机器学习</category>
         <category>推荐系统</category>
@@ -11,6 +11,7 @@
       <tags>
         <tag>推荐系统</tag>
         <tag>Embedding</tag>
+        <tag>阅读笔记</tag>
       </tags>
   </entry>
   <entry>
