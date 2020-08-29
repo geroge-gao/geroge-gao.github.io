@@ -56,18 +56,18 @@
   };
 </script>
 
-  <meta name="description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
+  <meta name="description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
 <meta name="keywords" content="推荐系统,Embedding,阅读笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《深度学习推荐系统》阅读笔记(2)">
 <meta property="og:url" content="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/index.html">
 <meta property="og:site_name" content="心如止水">
-<meta property="og:description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
+<meta property="og:description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-26T16:01:32.946Z">
+<meta property="og:updated_time" content="2020-08-29T08:57:44.939Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《深度学习推荐系统》阅读笔记(2)">
-<meta name="twitter:description" content="Embedding作用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
+<meta name="twitter:description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
   <link rel="canonical" href="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/">
 
 
@@ -269,7 +269,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-27 00:01:32" itemprop="dateModified" datetime="2020-08-27T00:01:32+08:00">2020-08-27</time>
+                <time title="修改时间：2020-08-29 16:57:44" itemprop="dateModified" datetime="2020-08-29T16:57:44+08:00">2020-08-29</time>
               </span>
             
           
@@ -305,11 +305,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Embedding作用"><a href="#Embedding作用" class="headerlink" title="Embedding作用"></a>Embedding作用</h1><p>Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。</p><p>Embedding是深度学习的基础核心操作，主要有一下三个原因</p><p>1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据</p><p>2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。</p><a id="more"></a>
+        <h1 id="Embedding作用及应用"><a href="#Embedding作用及应用" class="headerlink" title="Embedding作用及应用"></a>Embedding作用及应用</h1><p>Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。</p><p>Embedding是深度学习的基础核心操作，主要有一下三个原因</p><p>1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据</p><p>2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。</p><a id="more"></a>
 
 
 
 <p>3、Embedding对物品、用户的相似度计算是常用的推荐系统召回技术。</p>
+<p>所以Embedding对应的应用方向主要有一下三个：</p>
+<ul>
+<li>作为Embedding层，完成高维稀疏特征向量到低维稠密特征向量的转换</li>
+<li>作为预训练的特征向量，在与其他特征向量连接之后，一同输入深度学习网络进行训练</li>
+<li>计算物品和用户的相似度做Embedding</li>
+</ul>
 <h1 id="Word2Vec和Item2Vec"><a href="#Word2Vec和Item2Vec" class="headerlink" title="Word2Vec和Item2Vec"></a>Word2Vec和Item2Vec</h1><p>Word2vec主要用于计算词向量相似度，Item2Vec是Word2Vec在推荐上面的应用，只是两者优化目标不同。并且Item2Vec使用的物品序列是由用户历史行为产生的物品序列。</p>
 <p>假设Word2Vec中有一个长为$T$的句子为$w_1,w_2,…,w_T$,其优化的目标为</p>
 <script type="math/tex; mode=display">
@@ -331,7 +337,25 @@ P(v_j|v_i)=\begin{cases}
 \end{cases}</script><p>其中$M_{ij}$是节点$v_i$到$v_j$的边的权重。</p>
 <p>优点：简单</p>
 <p>缺点：随机游走抽样性不强</p>
-<h2 id="Node2vec"><a href="#Node2vec" class="headerlink" title="Node2vec"></a>Node2vec</h2>
+<h2 id="Node2vec"><a href="#Node2vec" class="headerlink" title="Node2vec"></a>Node2vec</h2><p>通过调整随机游走权重的方法使Graph Embedding的结果更加趋向于体现网络的同质性或结构。网络的同质性指距离相近的节点的Embedding应尽量相似。结构性是指结构上相似的节点Embedding应尽量相似。</p>
+<p>为了表达网络的结构性，游走更加倾向于BFS。对于BFS，不同的节点例如局部中心节点、边缘节点、连接性节点，其生成的序列节点数量和顺序必然不同。</p>
+<p>为了表达同质性，游走通常采用DFS。DFS通常在一个大的集团内部游走，这就使得社区内部节点Embedding更加相似。</p>
+<p>Node2vec主要是<font color="red">通过节点间的跳转概率空值游走时DFS和BFS的倾向</font></p>
+<p>如图所示(图先欠着)，Node2Vec算法从节点$t$跳到节点$v$，再从$v$跳节点$x$的概率为$\pi_{vx}=a_{pq}(t,x)\cdot w_{vx}$</p>
+<script type="math/tex; mode=display">
+a_{pq}=\begin{cases} 
+\frac{1}{p},&   如果d_{tx}=0 \\
+1,  &如果d_{tx}=1             \\
+\frac{1}{q}, &如果 d_{tx}=2
+\end{cases}</script><p>其中$d_{tx}$表示节点$t$到节点$x$的距离，参数$p$和$q$共同控制这随机游走的倾向性，当$p$月小的时候，随机游走返回$t$的可能性越高，当$q$越小的时候，随机游走返回远方的可能性越大。</p>
+<p>直观理解：同质性的物品很有可能是相似的物品或者经常被一同购买的物品，结构性可能是各类爆款、各品类的最佳凑单商品等拥有类趋势或结构性的商品。</p>
+<p>优点：可以有效的挖掘不同的网络特征</p>
+<p>缺点：需要较多的人工调参工作</p>
+<h2 id="EGES"><a href="#EGES" class="headerlink" title="EGES"></a>EGES</h2><p>Enhanced Graph Embedding with Side information基本思想是在DeepWalk生成Graph Embedding的基础上引入补充信息，以解决冷启动问题。</p>
+<p>可以利用物品相同属性、相同类别等信息建立物品之间的边，生成基于内容的知识图谱，基于知识图谱生成的物品Embedding向量作为补充信息，并且采用平均池化将不同物品的Embedding平均起来，为了防止平均池化导致有效信息丢失，对每个Embedding向量进行加权(Enhance 的体现)。在实际加权的过程中，采用了$e^{a_j}$而不是$a_j$进行加权，主要原因有两点：一：避免权重为0，二：指数函数在梯度下降的过程中有良好的数学性。因此EGES更多的是工程上的尝试，缺乏学术上的创新。</p>
+<h1 id="局部敏感哈希"><a href="#局部敏感哈希" class="headerlink" title="局部敏感哈希"></a>局部敏感哈希</h1><p>传统Embedding在做召回的时候，以为着要对所有物品进行Embedding进行遍历，效率比较低。在推荐系统中，通常物品总数动达几百万，因此会导致线上模型过程的巨大延迟。</p>
+<p>局部敏感哈希则是为了解决这个问题，其基本思想是然相邻的点落入到同一个桶里面，</p>
+<h2 id><a href="#" class="headerlink" title=" "></a> </h2>
     </div>
 
     
@@ -434,7 +458,7 @@ P(v_j|v_i)=\begin{cases}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Embedding作用"><span class="nav-number">1.</span> <span class="nav-text">Embedding作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word2Vec和Item2Vec"><span class="nav-number">2.</span> <span class="nav-text">Word2Vec和Item2Vec</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graph-Embedding"><span class="nav-number">3.</span> <span class="nav-text">Graph Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DeepWalk"><span class="nav-number">3.1.</span> <span class="nav-text">DeepWalk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node2vec"><span class="nav-number">3.2.</span> <span class="nav-text">Node2vec</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Embedding作用及应用"><span class="nav-number">1.</span> <span class="nav-text">Embedding作用及应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word2Vec和Item2Vec"><span class="nav-number">2.</span> <span class="nav-text">Word2Vec和Item2Vec</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graph-Embedding"><span class="nav-number">3.</span> <span class="nav-text">Graph Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DeepWalk"><span class="nav-number">3.1.</span> <span class="nav-text">DeepWalk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node2vec"><span class="nav-number">3.2.</span> <span class="nav-text">Node2vec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EGES"><span class="nav-number">3.3.</span> <span class="nav-text">EGES</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#局部敏感哈希"><span class="nav-number">4.</span> <span class="nav-text">局部敏感哈希</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.1.</span> <span class="nav-text"> </span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
