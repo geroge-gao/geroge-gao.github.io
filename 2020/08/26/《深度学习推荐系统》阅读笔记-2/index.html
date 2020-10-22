@@ -59,14 +59,14 @@
   <meta name="description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
 <meta name="keywords" content="推荐系统,Embedding,阅读笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《深度学习推荐系统》阅读笔记(2)">
+<meta property="og:title" content="《深度学习推荐系统》阅读笔记(二)">
 <meta property="og:url" content="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/index.html">
 <meta property="og:site_name" content="心如止水">
 <meta property="og:description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-29T08:57:44.939Z">
+<meta property="og:updated_time" content="2020-10-22T07:37:42.787Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《深度学习推荐系统》阅读笔记(2)">
+<meta name="twitter:title" content="《深度学习推荐系统》阅读笔记(二)">
 <meta name="twitter:description" content="Embedding作用及应用Embedding也是编码方式的一种，主要作用是将稀疏向量转换成稠密向量。Embedding是深度学习的基础核心操作，主要有一下三个原因1、推荐场景下会使用one-hot对类别和id进行编码，造成大量稀疏数据，神经网络无法很好地处理这种稀疏数据2、Embedding本身是极强的特征向量，可以引入任何信息进行编码。">
   <link rel="canonical" href="http://yoursite.com/2020/08/26/《深度学习推荐系统》阅读笔记-2/">
 
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title>《深度学习推荐系统》阅读笔记(2) | 心如止水</title>
+  <title>《深度学习推荐系统》阅读笔记(二) | 心如止水</title>
   
 
 
@@ -242,7 +242,7 @@
       <meta itemprop="name" content="心如止水">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">《深度学习推荐系统》阅读笔记(2)
+        <h1 class="post-title" itemprop="name headline">《深度学习推荐系统》阅读笔记(二)
 
           
         </h1>
@@ -269,7 +269,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-29 16:57:44" itemprop="dateModified" datetime="2020-08-29T16:57:44+08:00">2020-08-29</time>
+                <time title="修改时间：2020-10-22 15:37:42" itemprop="dateModified" datetime="2020-10-22T15:37:42+08:00">2020-10-22</time>
               </span>
             
           
@@ -354,7 +354,9 @@ a_{pq}=\begin{cases}
 <h2 id="EGES"><a href="#EGES" class="headerlink" title="EGES"></a>EGES</h2><p>Enhanced Graph Embedding with Side information基本思想是在DeepWalk生成Graph Embedding的基础上引入补充信息，以解决冷启动问题。</p>
 <p>可以利用物品相同属性、相同类别等信息建立物品之间的边，生成基于内容的知识图谱，基于知识图谱生成的物品Embedding向量作为补充信息，并且采用平均池化将不同物品的Embedding平均起来，为了防止平均池化导致有效信息丢失，对每个Embedding向量进行加权(Enhance 的体现)。在实际加权的过程中，采用了$e^{a_j}$而不是$a_j$进行加权，主要原因有两点：一：避免权重为0，二：指数函数在梯度下降的过程中有良好的数学性。因此EGES更多的是工程上的尝试，缺乏学术上的创新。</p>
 <h1 id="局部敏感哈希"><a href="#局部敏感哈希" class="headerlink" title="局部敏感哈希"></a>局部敏感哈希</h1><p>传统Embedding在做召回的时候，以为着要对所有物品进行Embedding进行遍历，效率比较低。在推荐系统中，通常物品总数动达几百万，因此会导致线上模型过程的巨大延迟。</p>
-<p>局部敏感哈希则是为了解决这个问题，其基本思想是然相邻的点落入到同一个桶里面，</p>
+<p>局部敏感哈希则是为了解决这个问题，其基本思想是然相邻的点落入到同一个桶里面。</p>
+<p>优点：解决利用Embedding作为推荐系统召回层的快速计算方法</p>
+<p>缺点：存在小概率的最近邻遗漏的可能，需要进行较多的人工调参</p>
 <h2 id><a href="#" class="headerlink" title=" "></a> </h2>
     </div>
 
@@ -410,6 +412,10 @@ a_{pq}=\begin{cases}
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/09/27/spark内存管理机制及spark-submit参数调优/" rel="prev" title="spark内存管理机制及spark-submit参数调优">
+                  spark内存管理机制及spark-submit参数调优 <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -476,7 +482,7 @@ a_{pq}=\begin{cases}
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -489,7 +495,7 @@ a_{pq}=\begin{cases}
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -502,7 +508,7 @@ a_{pq}=\begin{cases}
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
