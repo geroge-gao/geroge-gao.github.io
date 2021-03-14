@@ -64,7 +64,7 @@
 <meta property="og:site_name" content="心如止水">
 <meta property="og:description" content="传统模型协同过滤1、User-CF的缺点 一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度 用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用 2、User-CF和Item-CF的使用场景 User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点 Item-CF适用于兴趣变化比">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-08-25T16:59:02.778Z">
+<meta property="og:updated_time" content="2020-10-22T09:27:13.149Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《深度学习推荐系统》阅读笔记(一)">
 <meta name="twitter:description" content="传统模型协同过滤1、User-CF的缺点 一般用户数量远大于物品数，用户相似度矩阵较大，不便于存储。同时用户数增长会造成在线存储系统难以承载扩张速度 用户历史数据向量往往比较稀疏，User-CF不适用于正反馈获取比较困难的场景，例如大件商品购买等低频应用 2、User-CF和Item-CF的使用场景 User-CF适用于新闻推荐场景，具有较强的社交性、更容易发现热点 Item-CF适用于兴趣变化比">
@@ -269,7 +269,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-26 00:59:02" itemprop="dateModified" datetime="2020-08-26T00:59:02+08:00">2020-08-26</time>
+                <time title="修改时间：2020-10-22 17:27:13" itemprop="dateModified" datetime="2020-10-22T17:27:13+08:00">2020-10-22</time>
               </span>
             
           
@@ -316,7 +316,15 @@
 
 
 <p>协同过滤存在天然缺陷，头部效应明显，处理稀疏向量的能力较弱。并且协同过滤仅仅利用了用户年龄、性别、商品描述、商品分类等信息，会造成有效信息遗漏。</p>
-<h2 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a>矩阵分解</h2><p>矩阵分解，针对协同过滤算法头部效应明显，泛化能力弱，加入了隐向量</p>
+<h2 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a>矩阵分解</h2><p>矩阵分解，针对协同过滤算法头部效应明显，泛化能力弱，加入了隐向量。</p>
+<p>矩阵分解的三种方法：</p>
+<ul>
+<li>奇异值分解SVD</li>
+<li>特征值分解</li>
+<li>梯度下降法</li>
+</ul>
+<p>特征值分解只适合方阵，不适用于分解用户-物品矩阵。</p>
+<p>奇异值分解要求共现矩阵稠密，且时间复杂度过高。所以一般采用梯度下降来进行矩阵分解。</p>
 <p>矩阵分解优点：</p>
 <ul>
 <li>泛化能力强</li>
@@ -616,7 +624,7 @@ V_u=f(V_a)=\sum_{i=1}^Nw_i\cdot V_i = \sum_{i=1}^Ng(V_i,V_a)\cdot V_i</script><p
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -629,7 +637,7 @@ V_u=f(V_a)=\sum_{i=1}^Nw_i\cdot V_i = \sum_{i=1}^Ng(V_i,V_a)\cdot V_i</script><p
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -642,7 +650,7 @@ V_u=f(V_a)=\sum_{i=1}^Nw_i\cdot V_i = \sum_{i=1}^Ng(V_i,V_a)\cdot V_i</script><p
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -703,7 +711,7 @@ V_u=f(V_a)=\sum_{i=1}^Nw_i\cdot V_i = \sum_{i=1}^Ng(V_i,V_a)\cdot V_i</script><p
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
